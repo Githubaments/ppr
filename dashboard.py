@@ -108,7 +108,7 @@ if len(filtered_data) < 100:
 
     for index, row in filtered_data.iterrows():
         st.write(f'Checking row {index} - Latitude: {row["latitude"]}, Longitude: {row["longitude"]}')
-        if pd.isnull(row['latitude']) or pd.isnull(row['longitude']):
+        if pd.isnull(row['latitude']) or pd.isnull(row['longitude']) or row['latitude'] == '' or row['longitude'] == '':
             st.write(f'Checking row {index} - Latitude: {row["latitude"]}, Longitude: {row["longitude"]}')
             address = row['Address']
             logging.info(f'Geocoding address: {address}')
