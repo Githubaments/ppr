@@ -124,9 +124,8 @@ filtered_data
 filtered_data = filtered_data.dropna(subset=['latitude', 'longitude'])
 filtered_data = filtered_data[filtered_data['latitude'] != '']
 
-# Check if 'latitude' and 'longitude' columns exist in the data and the user has inputted data
-# Create a Streamlit map to display data points using Latitude and Longitude columns
 st.title('Google Sheet Data on Map')
+filtered_data
 
 # Check if 'latitude' and 'longitude' columns exist in the data and the user has inputted data
 if 'latitude' in filtered_data.columns and 'longitude' in filtered_data.columns and user_has_input:
