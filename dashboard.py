@@ -119,7 +119,6 @@ if len(filtered_data) < 100:
                 if not data_row.empty:
                     data_row_number = data_row.index[0]  # Get the row number
                     try:
-                        st.write(data_row_number)
                         # Update the Google Sheet
                         sheet.update_cell(data_row_number + 2, filtered_data.columns.get_loc('latitude') + 1, lat)
                         sheet.update_cell(data_row_number + 2, filtered_data.columns.get_loc('longitude') + 1, lon)
@@ -151,7 +150,11 @@ if 'latitude' in filtered_data.columns and 'longitude' in filtered_data.columns 
     # Calculate the zoom level based on the data
     zoom = 15  # You can adjust the initial zoom level as needed
 
-    # Create the map with the calculated zoom level and popups
+    # Check the content of the DataFrame
+    logging.basicConfig(level=logging.DEBUG)
+    logging.debug(f"Filtered Data: {filtered_data.head()}")
+    
+    # Create the map with popups
     st.map(filtered_data[['latitude', 'longitude']].assign(
         popup=filtered_data[['Price', 'Date of Sale (dd/mm/yyyy)']].agg(
             lambda x: f"Price: {x['Price']}, Date: {x['Date of Sale (dd/mm/yyyy)']}",
@@ -161,7 +164,7 @@ if 'latitude' in filtered_data.columns and 'longitude' in filtered_data.columns 
             lambda x: f"Price: {x['Price']}, Date: {x['Date of Sale (dd/mm/yyyy)']}",
             axis=1
         )
-    ), zoom=zoom,size=2)
+    ), zoom=10)
 elif user_has_input:
     st.warning("Latitude and/or Longitude columns not found in the Google Sheet, unable to display map.")
 
