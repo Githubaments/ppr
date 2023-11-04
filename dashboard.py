@@ -101,7 +101,6 @@ else:
     st.stop()
 
 if len(filtered_data) < 100:
-    st.subheader("Fata:")
 
     for index, row in filtered_data.iterrows():
         st.write(index)
