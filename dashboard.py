@@ -91,7 +91,7 @@ user_has_input = bool(eircode_input or address_input)
 
 if len(filtered_data) < 100:
     for index, row in filtered_data.iterrows():
-        if pd.isna(row['Latitude']) or pd.isna(row['Longitude']):
+        if pd.isna(row['latitude']) or pd.isna(row['longitude']):
             address = row['Address']
             lat, lon = get_lat_lon(address)
             filtered_data.at[index, 'latitude'] = lat
