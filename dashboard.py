@@ -12,6 +12,8 @@ from oauth2client.service_account import ServiceAccountCredentials
 # Configure the logging settings
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
+st.set_page_config(layout="wide")
+
 
 # Create a connection object.
 credentials = service_account.Credentials.from_service_account_info(
