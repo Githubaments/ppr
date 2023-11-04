@@ -20,11 +20,8 @@ def load_data():
     gc = gspread.authorize(credentials)
 
     # Load the Google Sheet by its URL or title
-    sheet_url = private_gsheets_url 
-    worksheet = gc.open_by_url(sheet_url).sheet1
+    data = sheet.get_all_records()
 
-    # Read the data from the Google Sheet into a Pandas DataFrame
-    data = get_as_dataframe(worksheet)
 
     return data
 
