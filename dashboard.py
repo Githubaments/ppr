@@ -106,12 +106,23 @@ if len(filtered_data) < 100:
     for index, row in filtered_data.iterrows():
         if pd.isnull(row['latitude']) or pd.isnull(row['longitude']) or row['latitude'] == '' or row['longitude'] == '':
             address = row['Address']
+            eircode = row['Eircode']  
             logging.info(f'Geocoding address: {address}')
             lat, lon = get_lat_lon(address)
             if lat is not None and lon is not None:
                 filtered_data.at[index, 'latitude'] = lat
                 filtered_data.at[index, 'longitude'] = lon
                 logging.info(f'Updated latitude: {lat}, longitude: {lon}')
+                # Search for the corresponding row in the 'data' DataFrame based on the Eircode
+                data_row = data[data['Eircode'] == eircode]
+                if not data_rows.empty:
+                    # Get the list of row numbers from the 'data' DataFrame
+                    data_row_numbers = data_rows.index.tolist()
+                    
+                    # Update the Google Sheet with latitude and longitude for all matching rows
+                    for data_row_number in data_row_numbers:
+                        sheet.update_cell(data_row_number + 2, filtered_df.columns.get_loc('Latitude') + 1, lat)
+                        sheet.update_cell(data_row_number + 2, filtered_df.columns.get_loc('Longitude') + 1, lon)
             else:
                 logging.warning(f'Geocoding failed for address: {address}')
 else:
