@@ -53,6 +53,9 @@ def load_data():
 # Load the data using the cache
 data = load_data()
 
+# Create a Streamlit text area to display logs
+log_area = st.text_area("Logs", "")
+
 # Create user inputs for filtering by Eircode and Address
 eircode_input = st.text_input("Enter Eircode:")
 address_input = st.text_input("Enter Address:")
@@ -100,8 +103,10 @@ if len(filtered_data) < 100:
                 filtered_df.at[index, 'Latitude'] = lat
                 filtered_df.at[index, 'Longitude'] = lon
                 logging.info(f'Updated Latitude: {lat}, Longitude: {lon}')
+                log_area.text(f'Updated Latitude: {lat}, Longitude: {lon}')
             else:
                 logging.warning(f'Geocoding failed for address: {address}')
+                log_area.warning(f'Geocoding failed for address: {address}')
 else:
     st.write("Too many addresses")
     st.stop()        
