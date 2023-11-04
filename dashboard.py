@@ -89,7 +89,7 @@ st.write(filtered_data)
 # Check if the user has inputted data
 user_has_input = bool(eircode_input or address_input)
 
-if len(filtered_df) < 100:
+if len(filtered_data) < 100:
     for index, row in filtered_df.iterrows():
         if pd.isna(row['Latitude']) or pd.isna(row['Longitude']):
             address = row['Address']
