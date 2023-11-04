@@ -18,6 +18,8 @@ def get_lat_lon(address):
     # Geocode the address to obtain latitude and longitude
     geocode_result = gmaps.geocode(address)
 
+    st.write(geocode_result)
+
     if geocode_result:
         location = geocode_result[0]['geometry']['location']
         lat, lon = location['lat'], location['lng']
