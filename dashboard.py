@@ -95,7 +95,7 @@ if len(filtered_data) < 100:
         if pd.isna(row['latitude']) or pd.isna(row['longitude']):
             address = row['Address']
             logging.info(f'Geocoding address: {address}')
-           lat, lon = get_lat_lon(address)
+            lat, lon = get_lat_lon(address)
             if lat is not None and lon is not None:
                 filtered_df.at[index, 'Latitude'] = lat
                 filtered_df.at[index, 'Longitude'] = lon
