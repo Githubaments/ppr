@@ -45,7 +45,7 @@ st.title('Google Sheet Data on Map')
 if 'Latitude' in filtered_data.columns and 'Longitude' in filtered_data.columns:
     st.map(filtered_data[['Latitude', 'Longitude']].assign(
         popup=filtered_data[['Price ()', 'Date of Sale (dd/mm/yyyy)']].agg(
-            lambda x: f"Price: {x['Price ()']}, Date: {x['Date of Sale (dd/mm/yyyy)']}",
+            lambda x: f"Price: {x['Price']}, Date: {x['Date of Sale (dd/mm/yyyy)']}",
             axis=1
         )
     ))
