@@ -95,7 +95,12 @@ st.subheader("Filtered Data:")
 # Check if the user has inputted data
 user_has_input = bool(eircode_input or address_input)
 
+st.subheader("Filtered:")
+
+
 if len(filtered_data) < 100:
+    st.subheader("Fata:")
+
     for index, row in filtered_data.iterrows():
         if pd.isna(row['latitude']) or pd.isna(row['longitude']):
             address = row['Address']
