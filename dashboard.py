@@ -141,29 +141,14 @@ filtered_data = filtered_data[filtered_data['latitude'] != '']
 st.title('Google Sheet Data on Map')
 filtered_data
 
-# Check if 'latitude' and 'longitude' columns exist in the data and the user has inputted data
-if 'latitude' in filtered_data.columns and 'longitude' in filtered_data.columns and user_has_input:
-    # Ensure the 'latitude' and 'longitude' columns are of float data type
-    filtered_data['latitude'] = filtered_data['latitude'].astype(float)
-    filtered_data['longitude'] = filtered_data['longitude'].astype(float)
+# Create a map object using folium
+m = folium.Map(location=[filtered_data['latitude'].mean(), filtered_data['longitude'].mean()], zoom_start=10)
 
+# Iterate over the DataFrame and add markers with popups
+for index, row in filtered_data.iterrows():
+    popup_text = f"Price: {row['Price']}, Date: {row['Date of Sale (dd/mm/yyyy)']}"
+    folium.Marker([row['latitude'], row['longitude']], popup=popup_text, tooltip=popup_text).add_to(m)
 
-
-    # Check the content of the DataFrame
-    logging.basicConfig(level=logging.DEBUG)
-    logging.debug(f"Filtered Data: {filtered_data.head()}")
-    
-    # Create the map with popups
-    st.map(filtered_data[['latitude', 'longitude']].assign(
-        popup=filtered_data[['Price', 'Date of Sale (dd/mm/yyyy)']].agg(
-            lambda x: f"Price: {x['Price']}, Date: {x['Date of Sale (dd/mm/yyyy)']}",
-            axis=1
-        ),
-        tooltip=filtered_data[['Price', 'Date of Sale (dd/mm/yyyy)']].agg(
-            lambda x: f"Price: {x['Price']}, Date: {x['Date of Sale (dd/mm/yyyy)']}",
-            axis=1
-        )
-    ), zoom=15)
-elif user_has_input:
-    st.warning("Latitude and/or Longitude columns not found in the Google Sheet, unable to display map.")
+# Display the map in Streamlit
+st.markdown(m._repr_html_(), unsafe_allow_html=True)
 
