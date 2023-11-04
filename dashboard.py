@@ -116,16 +116,13 @@ if len(filtered_data) < 100:
                 filtered_data.at[index, 'latitude'] = lat
                 filtered_data.at[index, 'longitude'] = lon
                 logging.info(f'Updated latitude: {lat}, longitude: {lon}')
-    
-                if not data_row.empty:
-                    data_row_number = data_row.index[0]  # Get the row number
-                    st.write(data_row_number)
-                    try:
-                        # Update the Google Sheet
-                        sheet.update_cell(index + 2, filtered_data.columns.get_loc('latitude') + 1, lat)
-                        sheet.update_cell(index + 2, filtered_data.columns.get_loc('longitude') + 1, lon)
-                        logging.info("Update successful")
-                    except Exception as e:
+
+                try:
+                    # Update the Google Sheet
+                    sheet.update_cell(index + 2, filtered_data.columns.get_loc('latitude') + 1, lat)
+                    sheet.update_cell(index + 2, filtered_data.columns.get_loc('longitude') + 1, lon)
+                    logging.info("Update successful")
+                except Exception as e:
                         logging.error(f"Update failed: {str(e)}")
             else:
                 logging.warning(f'Geocoding failed for address: {address}')
