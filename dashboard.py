@@ -66,11 +66,7 @@ st.write(filtered_data)
 
 
 # Check if the user has inputted data
-user_has_input = bool(eircode_input or address_input)
-
-st.write(user_has_input)
-
-if user_has_input == "TRUE":
+if bool(eircode_input or address_input):
 
     # Create a Streamlit map to display data points using Latitude and Longitude columns
     st.title('Google Sheet Data on Map')
