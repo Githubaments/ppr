@@ -24,9 +24,9 @@ def load_data():
 
     # Load the Google Sheet by its URL or title
     data = sheet.get_all_records()
+    df = pd.DataFrame(data)
 
-
-    return data
+    return df
 
 # Load the data using the cache
 data = load_data()
