@@ -108,10 +108,10 @@ if len(filtered_data) < 100:
     st.subheader("Fata:")
 
     for index, row in filtered_data.iterrows():
-        st.subheader("Fata:")
+        st.subheader("Fat0a:")
         if pd.isna(row['latitude']) or pd.isna(row['longitude']):
             address = row['Address']
-            st.subheader(f"Fata:{address}")
+            st.subheader(f"Fata1:{address}")
             logging.info(f'Geocoding address: {address}')
             lat, lon = get_lat_lon(address)
             if lat is not None and lon is not None:
