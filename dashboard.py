@@ -1,56 +1,62 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px
+import gspread
+from gspread_dataframe import get_as_dataframe
 
-@st.cache
-def load_data(file_path):
-    return pd.read_csv(file_path)
+# Authenticate with Google Sheets using your credentials JSON file
+from oauth2client.service_account import ServiceAccountCredentials
+scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
+credentials = ServiceAccountCredentials.from_json_keyfile_name('your-credentials.json', scope)
+gc = gspread.authorize(credentials)
 
-def main():
-    st.title("Personal Health Dashboard")
+# Load the Google Sheet by its URL or title
+sheet_url = private_gsheets_url 
+worksheet = gc.open_by_url(sheet_url).sheet1
 
-    file_path = st.file_uploader("Upload your personal data CSV file", type=["csv"])
-    if file_path is not None:
-        df = load_data(file_path)
-        st.dataframe(df)
+# Read the data from the Google Sheet into a Pandas DataFrame
+data = get_as_dataframe(worksheet)
 
-        # Choose the header to plot
-        selected_header = st.selectbox("Select a header to plot over time", df.columns)
+# Create user inputs for filtering by Eircode and Address
+eircode_input = st.text_input("Enter Eircode:")
+address_input = st.text_input("Enter Address:")
 
-        # Plotting the selected header over time using Plotly
-        fig = px.line(df, x='Time of Measurement', y=selected_header)
-        st.plotly_chart(fig)
+# Extract the first three characters from the full Eircode input
+eircode_prefix = eircode_input[:3].upper() if eircode_input else ""
 
-        # Showing some statistics
-        st.write("### Personal Data Statistics")
-        st.write("Mean value: ", df[selected_header].mean())
-        st.write("Minimum value: ", df[selected_header].min())
-        st.write("Maximum value: ", df[selected_header].max())
+# Filter the data based on user inputs
+filtered_data = data.copy()
 
-    google_fit_path = st.file_uploader("Upload your Google Fit data CSV file", type=["csv"])
-    if google_fit_path is not None:
-        df_google_fit = load_data(google_fit_path)
-        st.dataframe(df_google_fit)
+exact_match = None  # Initialize a flag for exact Eircode match
 
-        # Choose the header to plot
-        selected_header_google_fit = st.selectbox("Select a header to plot over time", df_google_fit.columns)
+if eircode_prefix:
+    filtered_data = filtered_data[filtered_data['Eircode'].str.startswith(eircode_prefix)]
+    exact_match = data[data['Eircode'] == eircode_input]  # Check for an exact match
 
-        # Plotting the selected header over time using Plotly
-        fig_google_fit = px.line(df_google_fit, x='Time of Measurement', y=selected_header_google_fit)
-        st.plotly_chart(fig_google_fit)
+if address_input:
+    filtered_data = filtered_data[filtered_data['Address'].str.contains(address_input, case=False, na=False)]
 
-        # Showing some statistics
-        st.write("### Google Fit Data Statistics")
-        st.write("Mean value: ", df_google_fit[selected_header_google_fit].mean())
-        st.write("Minimum value: ", df_google_fit[selected_header_google_fit].min())
-        st.write("Maximum value: ", df_google_fit[selected_header_google_fit].max())
+# Remove duplicate rows based on the whole row
+filtered_data = filtered_data.drop_duplicates()
 
-        # 7-day moving average of heart points
-        df_google_fit['7-day avg heart points'] = df_google_fit['Heart Points'].rolling(window=7).mean()
-        fig_7day_avg = px.line(df_google_fit, x='Time of Measurement', y='7-day avg heart points')
-        st.plotly_chart(fig_7day_avg)
+# Create a Streamlit map to display data points using Latitude and Longitude columns
+st.title('Google Sheet Data on Map')
 
-        # Count of days with more than 10,000 steps
-        df_google_fit['over_10000'] = df_google_fit['Steps'] >= 10000
-        fig_steps = px.bar(df_google_fit, x='Time of Measurement', y='over_10000', color='over_10000')
-       
+# Check if Latitude and Longitude columns exist in the data
+if 'Latitude' in filtered_data.columns and 'Longitude' in filtered_data.columns:
+    st.map(filtered_data[['Latitude', 'Longitude']].assign(
+        popup=filtered_data[['Price ()', 'Date of Sale (dd/mm/yyyy)']].agg(
+            lambda x: f"Price: {x['Price ()']}, Date: {x['Date of Sale (dd/mm/yyyy)']}",
+            axis=1
+        )
+    ))
+else:
+    st.error("Latitude and/or Longitude columns not found in the Google Sheet.")
+
+# Display a special message and exact match data if an exact match is found
+if exact_match is not None and not exact_match.empty:
+    st.subheader("Exact Eircode Match Found:")
+    st.write(exact_match)
+
+# Display the filtered data
+st.subheader("Filtered Data:")
+st.write(filtered_data)
