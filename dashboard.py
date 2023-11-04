@@ -19,6 +19,9 @@ def load_data():
         
     gc = gspread.authorize(credentials)
 
+    sheet = gc.open('PPR').sheet1
+
+
     # Load the Google Sheet by its URL or title
     data = sheet.get_all_records()
 
