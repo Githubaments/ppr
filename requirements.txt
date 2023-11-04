@@ -3,3 +3,8 @@ streamlit
 plotly_express
 pandas
 numpy
+streamlit
+oauth2client
+gsheetsdb
+pyparsing
+gspread
