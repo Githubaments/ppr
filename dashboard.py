@@ -119,6 +119,7 @@ if len(filtered_data) < 100:
                 data_row = data[data['Eircode'] == eircode]
                 if not data_row.empty:
                     data_row_number = data_row.index[0]  # Get the row number
+                    st.write(data_row_number)
                     try:
                         # Update the Google Sheet
                         sheet.update_cell(data_row_number + 2, filtered_data.columns.get_loc('latitude') + 1, lat)
