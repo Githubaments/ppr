@@ -120,7 +120,12 @@ if len(filtered_data) < 100:
                     
                     # Update the Google Sheet with latitude and longitude for all matching rows
                     for data_row_number in data_row_numbers:
-                        sheet.update_cell(data_row_number + 2, filtered_data.columns.get_loc('latitude') + 1, lat)
+                        try:
+                            # Update the Google Sheet
+                            sheet.update_cell(data_row_number + 2, filtered_data.columns.get_loc('latitude') + 1, lat)
+                            logging.info("Update successful")
+                        except Exception as e:
+                            logging.error(f"Update failed: {str(e)}")
                         sheet.update_cell(data_row_number + 2, filtered_data.columns.get_loc('longitude') + 1, lon)
             else:
                 logging.warning(f'Geocoding failed for address: {address}')
