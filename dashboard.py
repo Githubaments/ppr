@@ -73,6 +73,10 @@ filtered_data = filtered_data.dropna(subset=['latitude', 'longitude'])
 filtered_data = filtered_data[filtered_data['latitude'] != '']
 
 # Check if 'latitude' and 'longitude' columns exist in the data and the user has inputted data
+# Create a Streamlit map to display data points using Latitude and Longitude columns
+st.title('Google Sheet Data on Map')
+
+# Check if 'latitude' and 'longitude' columns exist in the data and the user has inputted data
 if 'latitude' in filtered_data.columns and 'longitude' in filtered_data.columns and user_has_input:
     # Ensure the 'latitude' and 'longitude' columns are of float data type
     filtered_data['latitude'] = filtered_data['latitude'].astype(float)
@@ -81,12 +85,17 @@ if 'latitude' in filtered_data.columns and 'longitude' in filtered_data.columns 
     # Calculate the zoom level based on the data
     zoom = 10  # You can adjust the initial zoom level as needed
 
-    # Create the map with the calculated zoom level
+    # Create the map with the calculated zoom level and popups
     st.map(filtered_data[['latitude', 'longitude']].assign(
         popup=filtered_data[['Price', 'Date of Sale (dd/mm/yyyy)']].agg(
             lambda x: f"Price: {x['Price']}, Date: {x['Date of Sale (dd/mm/yyyy)']}",
             axis=1
+        ),
+        tooltip=filtered_data[['Price', 'Date of Sale (dd/mm/yyyy)']].agg(
+            lambda x: f"Price: {x['Price']}, Date: {x['Date of Sale (dd/mm/yyyy)']}",
+            axis=1
         )
-    ), zoom=zoom)
+    ), zoom=zoom,size=2)
 elif user_has_input:
     st.warning("Latitude and/or Longitude columns not found in the Google Sheet, unable to display map.")
+
