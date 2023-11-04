@@ -72,7 +72,7 @@ if bool(eircode_input or address_input):
     st.title('Google Sheet Data on Map')
     
     # Check if 'latitude' and 'longitude' columns exist in the data and the user has inputted data
-    if 'latitude' in filtered_data.columns and 'longitude' in filtered_data.columns and user_has_input:
+    if 'latitude' in filtered_data.columns and 'longitude' in filtered_data.columns:
         st.map(filtered_data[['latitude', 'longitude']].assign(
             popup=filtered_data[['Price', 'Date of Sale (dd/mm/yyyy)']].agg(
                 lambda x: f"Price: {x['Price']}, Date: {x['Date of Sale (dd/mm/yyyy)']}",
