@@ -14,7 +14,7 @@ def load_data():
     gc = gspread.authorize(credentials)
 
     # Load the Google Sheet by its URL or title
-    sheet_url = 'your_google_sheet_url_here'
+    sheet_url = private_gsheets_url 
     worksheet = gc.open_by_url(sheet_url).sheet1
 
     # Read the data from the Google Sheet into a Pandas DataFrame
