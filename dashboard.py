@@ -103,31 +103,31 @@ else:
 if len(filtered_data) < 100:
     st.subheader("Fata:")
 
-for index, row in filtered_data.iterrows():
-    if pd.isnull(row['latitude']) or pd.isnull(row['longitude']) or row['latitude'] == '' or row['longitude'] == '':
-        address = row['Address']
-        eircode = row['Eircode']
-        logging.info(f'Geocoding address: {address}')
-        lat, lon = get_lat_lon(address)
-        if lat is not None and lon is not None:
-            filtered_data.at[index, 'latitude'] = lat
-            filtered_data.at[index, 'longitude'] = lon
-            logging.info(f'Updated latitude: {lat}, longitude: {lon}')
-
-            # Search for the corresponding row in the 'data' DataFrame based on the Eircode
-            data_row = data[data['Eircode'] == eircode]
-            if not data_row.empty:
-                data_row_number = data_row.index[0]  # Get the row number
-                try:
-                    st.write(data_row_number)
-                    # Update the Google Sheet
-                    sheet.update_cell(data_row_number + 2, filtered_data.columns.get_loc('latitude') + 1, lat)
-                    sheet.update_cell(data_row_number + 2, filtered_data.columns.get_loc('longitude') + 1, lon)
-                    logging.info("Update successful")
-                except Exception as e:
-                    logging.error(f"Update failed: {str(e)}")
-        else:
-            logging.warning(f'Geocoding failed for address: {address}')
+    for index, row in filtered_data.iterrows():
+        if pd.isnull(row['latitude']) or pd.isnull(row['longitude']) or row['latitude'] == '' or row['longitude'] == '':
+            address = row['Address']
+            eircode = row['Eircode']
+            logging.info(f'Geocoding address: {address}')
+            lat, lon = get_lat_lon(address)
+            if lat is not None and lon is not None:
+                filtered_data.at[index, 'latitude'] = lat
+                filtered_data.at[index, 'longitude'] = lon
+                logging.info(f'Updated latitude: {lat}, longitude: {lon}')
+    
+                # Search for the corresponding row in the 'data' DataFrame based on the Eircode
+                data_row = data[data['Eircode'] == eircode]
+                if not data_row.empty:
+                    data_row_number = data_row.index[0]  # Get the row number
+                    try:
+                        st.write(data_row_number)
+                        # Update the Google Sheet
+                        sheet.update_cell(data_row_number + 2, filtered_data.columns.get_loc('latitude') + 1, lat)
+                        sheet.update_cell(data_row_number + 2, filtered_data.columns.get_loc('longitude') + 1, lon)
+                        logging.info("Update successful")
+                    except Exception as e:
+                        logging.error(f"Update failed: {str(e)}")
+            else:
+                logging.warning(f'Geocoding failed for address: {address}')
 
 else:
     st.write("Too many addresses")
