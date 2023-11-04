@@ -68,6 +68,16 @@ st.write(filtered_data)
 # Check if the user has inputted data
 user_has_input = bool(eircode_input or address_input)
 
+# Convert 'latitude' and 'longitude' columns to numeric (float) and handle non-numeric and empty string values
+filtered_data['latitude'] = pd.to_numeric(filtered_data['latitude'], errors='coerce')
+filtered_data['longitude'] = pd.to_numeric(filtered_data['longitude'], errors='coerce')
+
+# Drop rows with NaN or empty string values in 'latitude' or 'longitude' columns
+filtered_data = filtered_data.dropna(subset=['latitude', 'longitude'])
+
+# Create a Streamlit map to display data points using Latitude and Longitude columns
+st.title('Google Sheet Data on Map')
+
 # Check if 'latitude' and 'longitude' columns exist in the data and the user has inputted data
 if 'latitude' in filtered_data.columns and 'longitude' in filtered_data.columns and user_has_input:
     # Ensure the 'latitude' and 'longitude' columns are of float data type
@@ -88,5 +98,5 @@ if 'latitude' in filtered_data.columns and 'longitude' in filtered_data.columns 
             axis=1
         )
     ), zoom=zoom, center=(center_lat, center_lon))
-else:
-    st.error("Latitude and/or Longitude columns not found in the Google Sheet.")
+elif user_has_input:
+    st.warning("Latitude and/or Longitude columns not found in the Google Sheet, unable to display map.")
