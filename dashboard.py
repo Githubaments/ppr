@@ -53,19 +53,7 @@ if address_input:
 # Remove duplicate rows based on the whole row
 filtered_data = filtered_data.drop_duplicates()
 
-# Create a Streamlit map to display data points using Latitude and Longitude columns
-st.title('Google Sheet Data on Map')
 
-# Check if Latitude and Longitude columns exist in the data
-if 'latitude' in filtered_data.columns and 'longitude' in filtered_data.columns:
-    st.map(filtered_data[['latitude', 'longitude']].assign(
-        popup=filtered_data[['Price', 'Date of Sale (dd/mm/yyyy)']].agg(
-            lambda x: f"Price: {x['Price']}, Date: {x['Date of Sale (dd/mm/yyyy)']}",
-            axis=1
-        )
-    ))
-else:
-    st.error("Latitude and/or Longitude columns not found in the Google Sheet.")
 
 # Display a special message and exact match data if an exact match is found
 if exact_match is not None and not exact_match.empty:
@@ -75,3 +63,25 @@ if exact_match is not None and not exact_match.empty:
 # Display the filtered data
 st.subheader("Filtered Data:")
 st.write(filtered_data)
+
+
+# Check if the user has inputted data
+user_has_input = bool(eircode_input or address_input)
+
+st.write(user_has_input)
+
+if user_has_input == TRUE:
+
+    # Create a Streamlit map to display data points using Latitude and Longitude columns
+    st.title('Google Sheet Data on Map')
+    
+    # Check if Latitude and Longitude columns exist in the data
+    if 'latitude' in filtered_data.columns and 'longitude' in filtered_data.columns:
+        st.map(filtered_data[['latitude', 'longitude']].assign(
+            popup=filtered_data[['Price', 'Date of Sale (dd/mm/yyyy)']].agg(
+                lambda x: f"Price: {x['Price']}, Date: {x['Date of Sale (dd/mm/yyyy)']}",
+                axis=1
+            )
+        ))
+    else:
+        st.error("Latitude and/or Longitude columns not found in the Google Sheet.")
