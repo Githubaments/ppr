@@ -8,7 +8,8 @@ from google.oauth2 import service_account
 # Authenticate with Google Sheets using your credentials JSON file
 from oauth2client.service_account import ServiceAccountCredentials
 
-
+# Configure the logging settings
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def get_lat_lon(address):
     import googlemaps
@@ -93,9 +94,14 @@ if len(filtered_data) < 100:
     for index, row in filtered_data.iterrows():
         if pd.isna(row['latitude']) or pd.isna(row['longitude']):
             address = row['Address']
-            lat, lon = get_lat_lon(address)
-            filtered_data.at[index, 'latitude'] = lat
-            filtered_data.at[index, 'longitude'] = lon     
+            logging.info(f'Geocoding address: {address}')
+           lat, lon = get_lat_lon(address)
+            if lat is not None and lon is not None:
+                filtered_df.at[index, 'Latitude'] = lat
+                filtered_df.at[index, 'Longitude'] = lon
+                logging.info(f'Updated Latitude: {lat}, Longitude: {lon}')
+            else:
+                logging.warning(f'Geocoding failed for address: {address}')
 else:
     st.write("Too many addresses")
     st.stop()        
