@@ -15,6 +15,9 @@ def get_lat_lon(address):
     # Replace 'YOUR_API_KEY' with your actual Google Maps API key
     gmaps = googlemaps.Client(key=API_KEY)
 
+    st.write(address)
+
+
     # Geocode the address to obtain latitude and longitude
     geocode_result = gmaps.geocode(address)
 
@@ -104,8 +107,10 @@ if len(filtered_data) < 100:
     st.subheader("Fata:")
 
     for index, row in filtered_data.iterrows():
+        st.subheader("Fata:")
         if pd.isna(row['latitude']) or pd.isna(row['longitude']):
             address = row['Address']
+            st.subheader(f"Fata:{address}")
             logging.info(f'Geocoding address: {address}')
             lat, lon = get_lat_lon(address)
             if lat is not None and lon is not None:
