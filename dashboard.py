@@ -88,5 +88,5 @@ if 'latitude' in filtered_data.columns and 'longitude' in filtered_data.columns 
             axis=1
         )
     ), zoom=zoom, center=(center_lat, center_lon))
-    else:
-        st.error("Latitude and/or Longitude columns not found in the Google Sheet.")
+else:
+    st.error("Latitude and/or Longitude columns not found in the Google Sheet.")
