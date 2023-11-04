@@ -8,6 +8,25 @@ from google.oauth2 import service_account
 # Authenticate with Google Sheets using your credentials JSON file
 from oauth2client.service_account import ServiceAccountCredentials
 
+
+
+def get_lat_lon(address):
+    import googlemaps
+    # Replace 'YOUR_API_KEY' with your actual Google Maps API key
+    gmaps = googlemaps.Client(key=API_KEY)
+
+    # Geocode the address to obtain latitude and longitude
+    geocode_result = gmaps.geocode(address)
+
+    if geocode_result:
+        location = geocode_result[0]['geometry']['location']
+        return location['lat'], location['lng']
+    else:
+        return None, None  # Handle cases where geocoding fails
+
+
+
+
 # Create a function to load the data and cache it
 @st.cache_data
 def load_data():
@@ -27,6 +46,8 @@ def load_data():
     df = pd.DataFrame(data)
 
     return df
+
+
 
 # Load the data using the cache
 data = load_data()
@@ -67,6 +88,17 @@ st.write(filtered_data)
 
 # Check if the user has inputted data
 user_has_input = bool(eircode_input or address_input)
+
+if len(filtered_df) < 100:
+    for index, row in filtered_df.iterrows():
+        if pd.isna(row['Latitude']) or pd.isna(row['Longitude']):
+            address = row['Address']
+            lat, lon = get_lat_lon(address)
+            filtered_df.at[index, 'Latitude'] = lat
+            filtered_df.at[index, 'Longitude'] = lon     
+else:
+    st.write("Too many addresses")
+    st.stop()        
 
 # Drop rows with NaN or empty string values in 'latitude' or 'longitude' columns
 filtered_data = filtered_data.dropna(subset=['latitude', 'longitude'])
