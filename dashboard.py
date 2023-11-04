@@ -90,7 +90,6 @@ if exact_match is not None and not exact_match.empty:
 
 # Display the filtered data
 st.subheader("Filtered Data:")
-st.write(filtered_data)
 
 
 # Check if the user has inputted data
