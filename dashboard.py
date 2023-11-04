@@ -44,7 +44,7 @@ st.title('Google Sheet Data on Map')
 # Check if Latitude and Longitude columns exist in the data
 if 'Latitude' in filtered_data.columns and 'Longitude' in filtered_data.columns:
     st.map(filtered_data[['Latitude', 'Longitude']].assign(
-        popup=filtered_data[['Price ()', 'Date of Sale (dd/mm/yyyy)']].agg(
+        popup=filtered_data[['Price', 'Date of Sale (dd/mm/yyyy)']].agg(
             lambda x: f"Price: {x['Price']}, Date: {x['Date of Sale (dd/mm/yyyy)']}",
             axis=1
         )
