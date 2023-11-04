@@ -113,7 +113,7 @@ if len(filtered_data) < 100:
                 filtered_data.at[index, 'longitude'] = lon
                 logging.info(f'Updated latitude: {lat}, longitude: {lon}')
                 # Search for the corresponding row in the 'data' DataFrame based on the Eircode
-                data_row_numbers = data[data['Eircode'] == eircode]
+                data_rows = data[data['Eircode'] == eircode]
                 if not data_rows.empty:
                     # Get the list of row numbers from the 'data' DataFrame
                     data_row_numbers = data_rows.index.tolist()
