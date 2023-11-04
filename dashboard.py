@@ -1,9 +1,10 @@
 import streamlit as st
 import pandas as pd
 import gspread
+import googlemaps
+import logging
 from gspread_dataframe import get_as_dataframe
 from google.oauth2 import service_account
-import logging
 
 # Authenticate with Google Sheets using your credentials JSON file
 from oauth2client.service_account import ServiceAccountCredentials
@@ -107,7 +108,7 @@ if len(filtered_data) < 100:
     st.subheader("Fata:")
 
     for index, row in filtered_data.iterrows():
-        st.write(f'Checking row {index} - Latitude: {row["latitude"]}, Longitude: {row["longitude"]}')
+        st.write(f'row {index} - Latitude: {row["latitude"]}, Longitude: {row["longitude"]}')
         if pd.isnull(row['latitude']) or pd.isnull(row['longitude']) or row['latitude'] == '' or row['longitude'] == '':
             st.write(f'Checking row {index} - Latitude: {row["latitude"]}, Longitude: {row["longitude"]}')
             address = row['Address']
