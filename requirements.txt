@@ -11,3 +11,4 @@ gspread
 gspread_dataframe
 googlemaps
 folium
+streamlit_folium
