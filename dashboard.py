@@ -70,7 +70,7 @@ user_has_input = bool(eircode_input or address_input)
 
 st.write(user_has_input)
 
-if user_has_input == "True":
+if user_has_input == "TRUE":
 
     # Create a Streamlit map to display data points using Latitude and Longitude columns
     st.title('Google Sheet Data on Map')
