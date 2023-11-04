@@ -12,6 +12,18 @@ from oauth2client.service_account import ServiceAccountCredentials
 # Configure the logging settings
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
+
+# Create a connection object.
+credentials = service_account.Credentials.from_service_account_info(
+            st.secrets["gcp_service_account"],
+            scopes=["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive", ],
+        )
+        
+gc = gspread.authorize(credentials)
+
+sheet = gc.open('PPR').sheet1
+
+
 def get_lat_lon(address):
     API_KEY = st.secrets["API_KEY"]
     gmaps = googlemaps.Client(key=API_KEY)
@@ -34,27 +46,16 @@ def get_lat_lon(address):
 # Create a function to load the data and cache it
 @st.cache_data
 def load_data():
-    # Create a connection object.
-    credentials = service_account.Credentials.from_service_account_info(
-            st.secrets["gcp_service_account"],
-            scopes=["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive", ],
-        )
-        
-    gc = gspread.authorize(credentials)
-
-    sheet = gc.open('PPR').sheet1
-
-
     # Load the Google Sheet by its URL or title
     data = sheet.get_all_records()
     df = pd.DataFrame(data)
 
-    return df,sheet
+    return df
 
 
 
 # Load the data using the cache
-data,sheet = load_data()
+data = load_data()
 
 # Create user inputs for filtering by Eircode and Address
 eircode_input = st.text_input("Enter Eircode:")
