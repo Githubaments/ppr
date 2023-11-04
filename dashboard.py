@@ -100,6 +100,8 @@ else:
     st.write("Too many addresses")
     st.stop()        
 
+filtered_data
+
 # Drop rows with NaN or empty string values in 'latitude' or 'longitude' columns
 filtered_data = filtered_data.dropna(subset=['latitude', 'longitude'])
 filtered_data = filtered_data[filtered_data['latitude'] != '']
