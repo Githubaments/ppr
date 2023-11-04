@@ -83,7 +83,7 @@ if 'latitude' in filtered_data.columns and 'longitude' in filtered_data.columns 
     filtered_data['longitude'] = filtered_data['longitude'].astype(float)
 
     # Calculate the zoom level based on the data
-    zoom = 10  # You can adjust the initial zoom level as needed
+    zoom = 20  # You can adjust the initial zoom level as needed
 
     # Create the map with the calculated zoom level and popups
     st.map(filtered_data[['latitude', 'longitude']].assign(
