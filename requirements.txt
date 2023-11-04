@@ -9,3 +9,4 @@ gsheetsdb
 pyparsing
 gspread
 gspread_dataframe
+googlemaps
