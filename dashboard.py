@@ -23,7 +23,6 @@ def get_lat_lon(address):
         location = geocode_result[0]['geometry']['location']
         lat, lon = location['lat'], location['lng']
         st.info(f'Geocoding successful for address: {address}')
-        st.info(f'Latitude: {lat}, Longitude: {lon}')
         return lat, lon
     else:
         st.warning(f'Geocoding failed for address: {address}')
