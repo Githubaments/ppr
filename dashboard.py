@@ -3,6 +3,7 @@ import pandas as pd
 import gspread
 import googlemaps
 import logging
+import folium
 from gspread_dataframe import get_as_dataframe
 from google.oauth2 import service_account
 
