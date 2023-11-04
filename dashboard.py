@@ -71,8 +71,8 @@ if bool(eircode_input or address_input):
     # Create a Streamlit map to display data points using Latitude and Longitude columns
     st.title('Google Sheet Data on Map')
     
-    # Check if Latitude and Longitude columns exist in the data
-    if 'latitude' in filtered_data.columns and 'longitude' in filtered_data.columns:
+    # Check if 'latitude' and 'longitude' columns exist in the data and the user has inputted data
+    if 'latitude' in filtered_data.columns and 'longitude' in filtered_data.columns and user_has_input:
         st.map(filtered_data[['latitude', 'longitude']].assign(
             popup=filtered_data[['Price', 'Date of Sale (dd/mm/yyyy)']].agg(
                 lambda x: f"Price: {x['Price']}, Date: {x['Date of Sale (dd/mm/yyyy)']}",
