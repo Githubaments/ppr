@@ -94,8 +94,8 @@ if len(filtered_data) < 100:
         if pd.isna(row['Latitude']) or pd.isna(row['Longitude']):
             address = row['Address']
             lat, lon = get_lat_lon(address)
-            filtered_data.at[index, 'Latitude'] = lat
-            filtered_data.at[index, 'Longitude'] = lon     
+            filtered_data.at[index, 'latitude'] = lat
+            filtered_data.at[index, 'longitude'] = lon     
 else:
     st.write("Too many addresses")
     st.stop()        
