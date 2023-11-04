@@ -68,6 +68,10 @@ st.write(filtered_data)
 # Check if the user has inputted data
 user_has_input = bool(eircode_input or address_input)
 
+# Drop rows with NaN or empty string values in 'latitude' or 'longitude' columns
+filtered_data = filtered_data.dropna(subset=['latitude', 'longitude'])
+filtered_data = filtered_data[filtered_data['latitude'] != '']
+
 # Check if 'latitude' and 'longitude' columns exist in the data and the user has inputted data
 if 'latitude' in filtered_data.columns and 'longitude' in filtered_data.columns and user_has_input:
     # Ensure the 'latitude' and 'longitude' columns are of float data type
