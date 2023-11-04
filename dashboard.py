@@ -13,6 +13,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def get_lat_lon(address):
+    API_KEY = st.secrets["API_KEY"]
     gmaps = googlemaps.Client(key=API_KEY)
     st.write('test')
 
