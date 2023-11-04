@@ -12,7 +12,6 @@ from oauth2client.service_account import ServiceAccountCredentials
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def get_lat_lon(address):
-    import googlemaps
     # Replace 'YOUR_API_KEY' with your actual Google Maps API key
     gmaps = googlemaps.Client(key=API_KEY)
 
@@ -21,8 +20,12 @@ def get_lat_lon(address):
 
     if geocode_result:
         location = geocode_result[0]['geometry']['location']
-        return location['lat'], location['lng']
+        lat, lon = location['lat'], location['lng']
+        st.info(f'Geocoding successful for address: {address}')
+        st.info(f'Latitude: {lat}, Longitude: {lon}')
+        return lat, lon
     else:
+        st.warning(f'Geocoding failed for address: {address}')
         return None, None  # Handle cases where geocoding fails
 
 
