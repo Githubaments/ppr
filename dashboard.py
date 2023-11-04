@@ -90,12 +90,12 @@ st.write(filtered_data)
 user_has_input = bool(eircode_input or address_input)
 
 if len(filtered_data) < 100:
-    for index, row in filtered_df.iterrows():
+    for index, row in filtered_data.iterrows():
         if pd.isna(row['Latitude']) or pd.isna(row['Longitude']):
             address = row['Address']
             lat, lon = get_lat_lon(address)
-            filtered_df.at[index, 'Latitude'] = lat
-            filtered_df.at[index, 'Longitude'] = lon     
+            filtered_data.at[index, 'Latitude'] = lat
+            filtered_data.at[index, 'Longitude'] = lon     
 else:
     st.write("Too many addresses")
     st.stop()        
