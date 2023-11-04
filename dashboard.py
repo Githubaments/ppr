@@ -14,6 +14,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 def get_lat_lon(address):
     # Replace 'YOUR_API_KEY' with your actual Google Maps API key
     gmaps = googlemaps.Client(key=API_KEY)
+    st.write('test')
 
     st.write(address)
 
