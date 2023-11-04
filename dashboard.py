@@ -15,15 +15,9 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 def get_lat_lon(address):
     API_KEY = st.secrets["API_KEY"]
     gmaps = googlemaps.Client(key=API_KEY)
-    st.write('test')
-
-    st.write(address)
-
 
     # Geocode the address to obtain latitude and longitude
     geocode_result = gmaps.geocode(address)
-
-    st.write(geocode_result)
 
     if geocode_result:
         location = geocode_result[0]['geometry']['location']
@@ -62,9 +56,6 @@ def load_data():
 
 # Load the data using the cache
 data = load_data()
-
-# Create a Streamlit text area to display logs
-log_area = st.text_area("Logs", "")
 
 # Create user inputs for filtering by Eircode and Address
 eircode_input = st.text_input("Enter Eircode:")
@@ -113,20 +104,16 @@ if len(filtered_data) < 100:
     st.subheader("Fata:")
 
     for index, row in filtered_data.iterrows():
-        st.write(f'row {index} - Latitude: {row["latitude"]}, Longitude: {row["longitude"]}')
         if pd.isnull(row['latitude']) or pd.isnull(row['longitude']) or row['latitude'] == '' or row['longitude'] == '':
-            st.write(f'Checking row {index} - Latitude: {row["latitude"]}, Longitude: {row["longitude"]}')
             address = row['Address']
             logging.info(f'Geocoding address: {address}')
             lat, lon = get_lat_lon(address)
             if lat is not None and lon is not None:
-                filtered_df.at[index, 'Latitude'] = lat
-                filtered_df.at[index, 'Longitude'] = lon
+                filtered_data.at[index, 'Latitude'] = lat
+                filtered_data.at[index, 'Longitude'] = lon
                 logging.info(f'Updated Latitude: {lat}, Longitude: {lon}')
-                log_area.text(f'Updated Latitude: {lat}, Longitude: {lon}')
             else:
                 logging.warning(f'Geocoding failed for address: {address}')
-                log_area.warning(f'Geocoding failed for address: {address}')
 else:
     st.write("Too many addresses")
     st.stop()        
