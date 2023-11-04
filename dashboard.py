@@ -5,16 +5,25 @@ from gspread_dataframe import get_as_dataframe
 
 # Authenticate with Google Sheets using your credentials JSON file
 from oauth2client.service_account import ServiceAccountCredentials
-scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-credentials = ServiceAccountCredentials.from_json_keyfile_name('your-credentials.json', scope)
-gc = gspread.authorize(credentials)
 
-# Load the Google Sheet by its URL or title
-sheet_url = private_gsheets_url 
-worksheet = gc.open_by_url(sheet_url).sheet1
+# Create a function to load the data and cache it
+@st.cache_data
+def load_data():
+    scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
+    credentials = ServiceAccountCredentials.from_json_keyfile_name('your-credentials.json', scope)
+    gc = gspread.authorize(credentials)
 
-# Read the data from the Google Sheet into a Pandas DataFrame
-data = get_as_dataframe(worksheet)
+    # Load the Google Sheet by its URL or title
+    sheet_url = 'your_google_sheet_url_here'
+    worksheet = gc.open_by_url(sheet_url).sheet1
+
+    # Read the data from the Google Sheet into a Pandas DataFrame
+    data = get_as_dataframe(worksheet)
+
+    return data
+
+# Load the data using the cache
+data = load_data()
 
 # Create user inputs for filtering by Eircode and Address
 eircode_input = st.text_input("Enter Eircode:")
