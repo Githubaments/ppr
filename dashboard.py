@@ -104,7 +104,8 @@ if len(filtered_data) < 100:
     st.subheader("Fata:")
 
     for index, row in filtered_data.iterrows():
-        st.write(row)        
+        st.write(row)
+        st.write(row.index)
         if pd.isnull(row['latitude']) or pd.isnull(row['longitude']) or row['latitude'] == '' or row['longitude'] == '':
             address = row['Address']
             eircode = row['Eircode']
