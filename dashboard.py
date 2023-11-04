@@ -127,6 +127,8 @@ if len(filtered_data) < 100:
                         logging.error(f"Update failed: {str(e)}")
             else:
                 logging.warning(f'Geocoding failed for address: {address}')
+    load_data.clear()
+
 
 else:
     st.write("Too many addresses")
@@ -147,8 +149,7 @@ if 'latitude' in filtered_data.columns and 'longitude' in filtered_data.columns 
     filtered_data['latitude'] = filtered_data['latitude'].astype(float)
     filtered_data['longitude'] = filtered_data['longitude'].astype(float)
 
-    # Calculate the zoom level based on the data
-    zoom = 15  # You can adjust the initial zoom level as needed
+
 
     # Check the content of the DataFrame
     logging.basicConfig(level=logging.DEBUG)
@@ -164,7 +165,7 @@ if 'latitude' in filtered_data.columns and 'longitude' in filtered_data.columns 
             lambda x: f"Price: {x['Price']}, Date: {x['Date of Sale (dd/mm/yyyy)']}",
             axis=1
         )
-    ), zoom=10)
+    ), zoom=15)
 elif user_has_input:
     st.warning("Latitude and/or Longitude columns not found in the Google Sheet, unable to display map.")
 
