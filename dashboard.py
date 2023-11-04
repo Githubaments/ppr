@@ -3,7 +3,7 @@ import pandas as pd
 import gspread
 from gspread_dataframe import get_as_dataframe
 from google.oauth2 import service_account
-
+import logging
 
 # Authenticate with Google Sheets using your credentials JSON file
 from oauth2client.service_account import ServiceAccountCredentials
