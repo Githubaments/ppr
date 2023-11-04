@@ -49,12 +49,12 @@ def load_data():
     data = sheet.get_all_records()
     df = pd.DataFrame(data)
 
-    return df
+    return df,sheet
 
 
 
 # Load the data using the cache
-data = load_data()
+data,sheet = load_data()
 
 # Create user inputs for filtering by Eircode and Address
 eircode_input = st.text_input("Enter Eircode:")
