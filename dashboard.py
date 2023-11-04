@@ -12,7 +12,6 @@ from oauth2client.service_account import ServiceAccountCredentials
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def get_lat_lon(address):
-    # Replace 'YOUR_API_KEY' with your actual Google Maps API key
     gmaps = googlemaps.Client(key=API_KEY)
     st.write('test')
 
@@ -108,10 +107,10 @@ if len(filtered_data) < 100:
     st.subheader("Fata:")
 
     for index, row in filtered_data.iterrows():
-        st.subheader("Fat0a:")
-        if pd.isna(row['latitude']) or pd.isna(row['longitude']):
+        st.write(f'Checking row {index} - Latitude: {row["latitude"]}, Longitude: {row["longitude"]}')
+        if pd.isnull(row['latitude']) or pd.isnull(row['longitude']):
+            st.write(f'Checking row {index} - Latitude: {row["latitude"]}, Longitude: {row["longitude"]}')
             address = row['Address']
-            st.subheader(f"Fata1:{address}")
             logging.info(f'Geocoding address: {address}')
             lat, lon = get_lat_lon(address)
             if lat is not None and lon is not None:
