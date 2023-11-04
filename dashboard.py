@@ -96,13 +96,17 @@ if exact_match is not None and not exact_match.empty:
 
 # Display the filtered data
 st.subheader("Filtered Data:")
+filtered_data
 
 
 # Check if the user has inputted data
 user_has_input = bool(eircode_input or address_input)
 
-st.subheader("Filtered:")
 
+if bool(eircode_input or address_input):
+    pass
+else:
+    st.stop()
 
 if len(filtered_data) < 100:
     st.subheader("Fata:")
