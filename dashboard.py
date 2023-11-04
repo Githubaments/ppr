@@ -133,14 +133,13 @@ else:
     st.write("Too many addresses")
     st.stop()        
 
-filtered_data
+
 
 # Drop rows with NaN or empty string values in 'latitude' or 'longitude' columns
 filtered_data = filtered_data.dropna(subset=['latitude', 'longitude'])
 filtered_data = filtered_data[filtered_data['latitude'] != '']
 
 st.title('Google Sheet Data on Map')
-filtered_data
 
 # Create a map object using folium
 m = folium.Map(location=[filtered_data['latitude'].mean(), filtered_data['longitude'].mean()], zoom_start=10)
@@ -151,5 +150,6 @@ for index, row in filtered_data.iterrows():
     folium.Marker([row['latitude'], row['longitude']], popup=popup_text, tooltip=popup_text).add_to(m)
 
 # Display the map in Streamlit
-st.markdown(m._repr_html_(), unsafe_allow_html=True)
+folium_static(m)
 
+filtered_data
