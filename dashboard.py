@@ -117,15 +117,13 @@ if len(filtered_data) < 100:
                 filtered_data.at[index, 'longitude'] = lon
                 logging.info(f'Updated latitude: {lat}, longitude: {lon}')
     
-                # Search for the corresponding row in the 'data' DataFrame based on the Eircode
-                data_row = data[data['Eircode'] == eircode]
                 if not data_row.empty:
                     data_row_number = data_row.index[0]  # Get the row number
                     st.write(data_row_number)
                     try:
                         # Update the Google Sheet
-                        sheet.update_cell(data_row_number + 2, filtered_data.columns.get_loc('latitude') + 1, lat)
-                        sheet.update_cell(data_row_number + 2, filtered_data.columns.get_loc('longitude') + 1, lon)
+                        sheet.update_cell(index + 2, filtered_data.columns.get_loc('latitude') + 1, lat)
+                        sheet.update_cell(index + 2, filtered_data.columns.get_loc('longitude') + 1, lon)
                         logging.info("Update successful")
                     except Exception as e:
                         logging.error(f"Update failed: {str(e)}")
