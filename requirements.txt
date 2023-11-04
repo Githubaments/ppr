@@ -10,3 +10,4 @@ pyparsing
 gspread
 gspread_dataframe
 googlemaps
+folium
