@@ -178,3 +178,43 @@ for index, row in filtered_data.iterrows():
 st.markdown(folium_static(m, width=1200, height=800), unsafe_allow_html=True)
 
 
+
+Yes, you can add a legend for the colors under the map in Folium. Here's an example of how to do that:
+
+python
+Copy code
+import folium
+from folium.plugins import MarkerCluster
+from streamlit_folium import folium_static
+import streamlit as st
+import pandas as pd
+import numpy as np
+
+# Create a map object using folium
+m = folium.Map(location=[filtered_data['latitude'].mean(), filtered_data['longitude'].mean()], zoom_start=10)
+
+# Define colors for each quantile
+colors = ['green', 'blue', 'yellow', 'orange', 'red']
+
+# Calculate quantile values for prices in your dataset
+quantiles = list(filtered_data['Price'].quantile(np.linspace(0, 1, len(colors) + 1)))
+
+# Create a legend
+legend_html = """
+     <div style="
+     position: fixed; 
+     bottom: 50px; left: 50px; width: 150px; height: 150px; 
+     background-color: white;
+     opacity: 0.8;
+     border-radius: 5px;
+     z-index: 1000;
+     font-size: 14px;
+     ">
+     <p><b>Price Legend</b></p>
+     """
+for i in range(len(quantiles) - 1):
+    legend_html += f"<i style='background:{colors[i]}'></i> ${int(quantiles[i]) / 1000}K - ${int(quantiles[i + 1]) / 1000}K<br>"
+legend_html += "</div>"
+m.get_root().html.add_child(folium.Element(legend_html))
+
+
