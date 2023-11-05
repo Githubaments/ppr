@@ -120,7 +120,17 @@ if exact_match is not None and not exact_match.empty:
 
 # Display the filtered data
 st.subheader("Filtered Data:")
-filtered_data
+
+
+# Convert the 'Date of Sale (dd/mm/yyyy)' column to datetime
+filtered_data['Date of Sale (dd/mm/yyyy)'] = pd.to_datetime(filtered_data['Date of Sale (dd/mm/yyyy)'], dayfirst=True)
+
+# Now, you can sort by this column, and it will sort by the actual date values
+filtered_data = filtered_data.sort_values(by='Date of Sale (dd/mm/yyyy)')
+formatted_df = filtered_data.style.format({
+    'Adjusted_Price': '{:,.0f}'
+})
+formatted_df
 
 
 # Check if the user has inputted data
