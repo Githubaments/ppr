@@ -150,6 +150,12 @@ st.title('Google Sheet Data on Map')
 # Create a map object using folium
 m = folium.Map(location=[filtered_data['latitude'].mean(), filtered_data['longitude'].mean()], zoom_start=10)
 
+# Define colors for each quantile
+colors = ['green', 'blue', 'yellow', 'orange', 'red']
+
+# Calculate quantile values for prices in your dataset
+quantiles = list(filtered_df['Price'].quantile(np.linspace(0, 1, len(colors)+1)))
+
 # Iterate over the DataFrame and add markers with popups
 for index, row in filtered_data.iterrows():
     popup_text = f"Price: {row['Price']}, Date: {row['Date of Sale (dd/mm/yyyy)']}"
