@@ -122,7 +122,10 @@ if exact_match is not None and not exact_match.empty:
 st.subheader("Filtered Data:")
 
 
-# Convert the 'Date of Sale (dd/mm/yyyy)' column to datetime
+# Convert 'Date of Sale (dd/mm/yyyy)' to datetime format
+filtered_data['Date of Sale (dd/mm/yyyy)'] = pd.to_datetime(filtered_data['Date of Sale (dd/mm/yyyy)'], dayfirst=True, errors='coerce')
+
+# Now that the column is in datetime format, format it to 'yyyymmdd' string
 filtered_data['Date of Sale (dd/mm/yyyy)'] = filtered_data['Date of Sale (dd/mm/yyyy)'].dt.strftime('%Y%m%d')
 
 filtered_data = filtered_data.sort_values(by='Date of Sale (dd/mm/yyyy)')
