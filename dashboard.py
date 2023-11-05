@@ -175,4 +175,8 @@ for index, row in filtered_data.iterrows():
 # Display the map in Streamlit with custom width and height
 st.markdown(folium_static(m, width=1200, height=800), unsafe_allow_html=True)
 
+# Loop through each color and its corresponding price range to display the legend
+for color, price_range in zip(colors, [f"{quantiles[i]:,.2f} - {quantiles[i+1]:,.2f}" for i in range(len(quantiles)-1)]):
+    circle_emoji = f"⬤"  # This is a solid circle emoji
+    st.markdown(f"<span style='color: {color}'>{circle_emoji}</span>  {price_range}", unsafe_allow_html=True)
 
