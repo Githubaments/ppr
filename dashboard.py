@@ -93,6 +93,12 @@ data = load_data()
 eircode_input = st.text_input("Enter Eircode:")
 address_input = st.text_input("Enter Address:")
 
+
+if bool(eircode_input or address_input):
+    pass
+else:
+    st.stop()
+
 # Extract the first three characters from the full Eircode input
 eircode_prefix = eircode_input[:3].upper() if eircode_input else ""
 
