@@ -37,7 +37,7 @@ def get_lat_lon(eircode, address):
     # If Eircode is missing, try to get it from the address
     if pd.isnull(eircode) or eircode == '':
         eircode_result = gmaps.places(address)
-        if eircode_result and eircode_result[0].get('postcode'):
+        if eircode_result and len(eircode_result) > 0 and eircode_result[0].get('postcode'):
             eircode = eircode_result[0]['postcode']
 
     # Geocode the address to obtain latitude and longitude
