@@ -207,6 +207,23 @@ quantiles = list(filtered_data['Price'].quantile(np.linspace(0, 1, len(gradient_
 
 filtered_data['Adjusted_Price'] = filtered_data['Adjusted_Price'].fillna(filtered_data['Price'])
 
+
+
+# Get the range of years
+min_year = filtered_data['Year'].min()
+max_year = filtered_data['Year'].max()
+
+# Define your opacity range
+min_opacity = 0.5
+max_opacity = 1.0
+
+# Function to calculate opacity based on year
+def calculate_opacity(year):
+    # Normalize the year to a 0-1 scale
+    normalized = (year - min_year) / (max_year - min_year)
+    # Scale to opacity range
+    return normalized * (max_opacity - min_opacity) + min_opacity
+
 # Iterate over the DataFrame and add markers with popups
 
 for index, row in filtered_data.iterrows():
@@ -216,11 +233,14 @@ for index, row in filtered_data.iterrows():
     adjusted_price_format = int(row['Adjusted_Price']) / 1000   # Convert the price to thousands
     popup_text = f"Original Price: €{original_price:.0f}K, <br> Adjusted Price: €{adjusted_price_format:.0f}K, <br> Date: {row['Date of Sale (dd/mm/yyyy)']},<br>Address: {full_address}"
     color = get_color(marker_price)  # This should be based on the price for which you want to assign the color
+    year = row['Year']
+    fill_opacity = calculate_opacity(year)
     folium.CircleMarker(
         [row['latitude'], row['longitude']],
         popup=popup_text,
         radius=6,
         tooltip=popup_text,
+        fill_opacity=fill_opacity,
         color=color,  # This should be the color variable, not the gradient_colors list
         fill=True,
         fill_color=color,  # Same here, use the color variable
