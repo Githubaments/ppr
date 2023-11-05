@@ -250,7 +250,12 @@ for index, row in filtered_data.iterrows():
     marker_price = int(row['Price']) 
     original_price = int(row['Price']) / 1000 
     adjusted_price_format = int(row['Adjusted_Price']) / 1000   # Convert the price to thousands
-    popup_text = f"Original Price: €{original_price:.0f}K, <br> Adjusted Price: €{adjusted_price_format:.0f}K, <br> Date: {row['Date of Sale (dd/mm/yyyy)']},<br>Address: {full_address}"
+    # Ensure the date is in datetime format
+    if pd.notnull(row['Date of Sale (dd/mm/yyyy)']) and isinstance(row['Date of Sale (dd/mm/yyyy)'], pd.Timestamp):
+        date_formatted = row['Date of Sale (dd/mm/yyyy)'].strftime('%b %Y')
+    else:
+        date_formatted = 'Unknown Date'
+    popup_text = f"Original Price: €{original_price:.0f}K, <br> Adjusted Price: €{adjusted_price_format:.0f}K, <br> Date: {date_formatted},<br>Address: {full_address}"
     color = get_color(marker_price)  # This should be based on the price for which you want to assign the color
     year = row['Year']
     fill_opacity = calculate_opacity(year)
