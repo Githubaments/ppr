@@ -53,7 +53,6 @@ def get_lat_lon(eircode, address):
         return None, None, eircode
 
 
-
 def get_color(price):
     """Determine the color for a property based on its price quantile."""
     for i in range(len(quantiles)-1):
