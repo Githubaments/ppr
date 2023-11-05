@@ -178,18 +178,6 @@ for index, row in filtered_data.iterrows():
 st.markdown(folium_static(m, width=1200, height=800), unsafe_allow_html=True)
 
 
-
-Yes, you can add a legend for the colors under the map in Folium. Here's an example of how to do that:
-
-python
-Copy code
-import folium
-from folium.plugins import MarkerCluster
-from streamlit_folium import folium_static
-import streamlit as st
-import pandas as pd
-import numpy as np
-
 # Create a map object using folium
 m = folium.Map(location=[filtered_data['latitude'].mean(), filtered_data['longitude'].mean()], zoom_start=10)
 
