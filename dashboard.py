@@ -129,7 +129,9 @@ filtered_data['Date of Sale (dd/mm/yyyy)'] = pd.to_datetime(filtered_data['Date 
 filtered_data = filtered_data.sort_values(by='Date of Sale (dd/mm/yyyy)')
 filtered_data['Adjusted_Price'] = pd.to_numeric(filtered_data['Adjusted_Price'], errors='coerce')
 formatted_df = filtered_data.style.format({
-    'Adjusted_Price': lambda x: '{:,.0f}'.format(x) if pd.notnull(x) else ''
+    'Adjusted_Price': lambda x: '{:,.0f}'.format(x) if pd.notnull(x) else '',
+                'Price': lambda x: '{:,.0f}'.format(x) if pd.notnull(x) else ''
+
 })
 formatted_df
 
