@@ -123,7 +123,7 @@ st.subheader("Filtered Data:")
 
 
 # Convert the 'Date of Sale (dd/mm/yyyy)' column to datetime
-df['Date of Sale (dd/mm/yyyy)'] = df['Date of Sale (dd/mm/yyyy)'].dt.strftime('%Y%m%d')
+filtered_data['Date of Sale (dd/mm/yyyy)'] = dfiltered_dataf['Date of Sale (dd/mm/yyyy)'].dt.strftime('%Y%m%d')
 
 filtered_data = filtered_data.sort_values(by='Date of Sale (dd/mm/yyyy)')
 filtered_data['Adjusted_Price'] = pd.to_numeric(filtered_data['Adjusted_Price'], errors='coerce')
