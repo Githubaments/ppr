@@ -133,18 +133,22 @@ st.subheader("Filtered Data:")
 
 filtered_data['Adjusted_Price'] = pd.to_numeric(filtered_data['Adjusted_Price'], errors='coerce')
 
-formatted_df = filtered_data.style.format({
-    'Adjusted_Price': lambda x: '{:,.0f}'.format(x) if pd.notnull(x) else '',
-                'Price': lambda x: '{:,.0f}'.format(x) if pd.notnull(x) else ''
 
-})
 # Convert 'Date of Sale (dd/mm/yyyy)' to datetime format
+formatted_df = filtered_data.copy()
+
 formatted_df['Date of Sale (dd/mm/yyyy)'] = pd.to_datetime(formatted_df['Date of Sale (dd/mm/yyyy)'], dayfirst=True, errors='coerce')
 
 # Now that the column is in datetime format, format it to 'yyyymmdd' string
 formatted_df['Date of Sale (dd/mm/yyyy)'] = formatted_df['Date of Sale (dd/mm/yyyy)'].dt.strftime('%Y%m%d')
 
 formatted_df = formatted_df.sort_values(by='Date of Sale (dd/mm/yyyy)')
+formatted_df = filtered_data.style.format({
+    'Adjusted_Price': lambda x: '{:,.0f}'.format(x) if pd.notnull(x) else '',
+                'Price': lambda x: '{:,.0f}'.format(x) if pd.notnull(x) else ''
+
+})
+
 formatted_df
 
 # Check if the user has inputted data
