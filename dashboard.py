@@ -73,6 +73,8 @@ def get_color(price):
     for i in range(len(quantiles)-1):
         if quantiles[i] <= price <= quantiles[i+1]:
             return gradient_colors[i]
+    # If the function reaches this point, it means no color was assigned, which is useful for debugging
+    st.write(f"Price {price} did not match any quantile, defaulting to grey.")
     return 'gray'  # Default color if something goes wrong
 
 # Create a function to load the data and cache it
