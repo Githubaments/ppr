@@ -211,10 +211,11 @@ filtered_data['Adjusted_Price'] = filtered_data['Adjusted_Price'].fillna(filtere
 
 for index, row in filtered_data.iterrows():
     full_address = row['Address']
+    marker_price = int(row['Price']) 
     original_price = int(row['Price']) / 1000 
     adjusted_price_format = int(row['Adjusted_Price']) / 1000   # Convert the price to thousands
     popup_text = f"Original Price: €{original_price:.0f}K, <br> Adjusted Price: €{adjusted_price_format:.0f}K, <br> Date: {row['Date of Sale (dd/mm/yyyy)']},<br>Address: {full_address}"
-    color = get_color(original_price)  # This should be based on the price for which you want to assign the color
+    color = get_color(marker_price)  # This should be based on the price for which you want to assign the color
     folium.CircleMarker(
         [row['latitude'], row['longitude']],
         popup=popup_text,
