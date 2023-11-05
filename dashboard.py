@@ -18,7 +18,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 st.set_page_config(layout="wide")
-
+pd.set_option("styler.render.max_elements", 2084992)
 
 # Create a connection object.
 credentials = service_account.Credentials.from_service_account_info(
