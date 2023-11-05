@@ -36,23 +36,29 @@ def get_lat_lon(eircode, address):
 
     # If Eircode is missing, try to get it from the address
     if pd.isnull(eircode) or eircode == '':
-        eircode_result = gmaps.places(address)
-        if eircode_result:
-            eircode_info = eircode_result[0]
-            if 'postcode' in eircode_info:
-                eircode = eircode_info['postcode']
+        try:
+            eircode_result = gmaps.places(address)
+            if eircode_result['results']:
+                eircode_info = eircode_result['results'][0]
+                if 'postcode' in eircode_info:
+                    eircode = eircode_info['postcode']
+        except Exception as e:
+            st.error(f'Error retrieving Eircode: {e}')
+            # Handle the exception as needed, for example, log it or set eircode to None
 
-    # Geocode the address to obtain latitude and longitude
-    geocode_result = gmaps.geocode(address)
+    try:
+        geocode_result = gmaps.geocode(address)
+        if geocode_result:
+            location = geocode_result[0]['geometry']['location']
+            lat, lon = location['lat'], location['lng']
+            st.info(f'Geocoding successful for address: {address}')
+            return lat, lon, eircode
+    except Exception as e:
+        st.error(f'Geocoding failed for address: {address} with error {e}')
 
-    if geocode_result:
-        location = geocode_result[0]['geometry']['location']
-        lat, lon = location['lat'], location['lng']
-        st.info(f'Geocoding successful for address: {address}')
-        return lat, lon, eircode
-    else:
-        st.warning(f'Geocoding failed for address: {address}')
-        return None, None, eircode
+    # If geocoding was not successful
+    st.warning(f'Geocoding failed for address: {address}')
+    return None, None, eircode
 
 
 
