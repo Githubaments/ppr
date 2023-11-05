@@ -154,7 +154,7 @@ m = folium.Map(location=[filtered_data['latitude'].mean(), filtered_data['longit
 colors = ['green', 'blue', 'yellow', 'orange', 'red']
 
 # Calculate quantile values for prices in your dataset
-quantiles = list(filtered_df['Price'].quantile(np.linspace(0, 1, len(colors)+1)))
+quantiles = list(filtered_data['Price'].quantile(np.linspace(0, 1, len(colors)+1)))
 
 # Iterate over the DataFrame and add markers with popups
 for index, row in filtered_data.iterrows():
