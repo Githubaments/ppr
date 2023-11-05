@@ -256,13 +256,24 @@ for index, row in filtered_data.iterrows():
     else:
         date_formatted = 'Unknown Date'
     popup_text = f"Original Price: €{original_price:.0f}K, <br> Adjusted Price: €{adjusted_price_format:.0f}K, <br> Date: {date_formatted},<br>Address: {full_address}"
+
+    # Check if the date is valid and calculate the age
+    if pd.notnull(row['Date of Sale (dd/mm/yyyy)']) and isinstance(row['Date of Sale (dd/mm/yyyy)'], pd.Timestamp):
+        sale_year = row['Date of Sale (dd/mm/yyyy)'].year
+        age = current_year - sale_year
+    else:
+        age = 0  # Default to 0 if the date is not known
+
+    # Define the size of the marker based on the age
+    marker_size = 10 - age / 5  # Example formula to decrease size with age
+    marker_size = max(2, marker_size)  # Ensure marker isn't too small
     color = get_color(marker_price)  # This should be based on the price for which you want to assign the color
     year = row['Year']
     fill_opacity = calculate_opacity(year)
     folium.CircleMarker(
         [row['latitude'], row['longitude']],
         popup=popup_text,
-        radius=6,
+        radius=marker_size,        
         tooltip=popup_text,
         fill_opacity=fill_opacity,
         color=color,  
