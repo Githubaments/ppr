@@ -123,9 +123,8 @@ st.subheader("Filtered Data:")
 
 
 # Convert the 'Date of Sale (dd/mm/yyyy)' column to datetime
-filtered_data['Date of Sale (dd/mm/yyyy)'] = pd.to_datetime(filtered_data['Date of Sale (dd/mm/yyyy)'], dayfirst=True)
+df['Date of Sale (dd/mm/yyyy)'] = df['Date of Sale (dd/mm/yyyy)'].dt.strftime('%Y%m%d')
 
-# Now, you can sort by this column, and it will sort by the actual date values
 filtered_data = filtered_data.sort_values(by='Date of Sale (dd/mm/yyyy)')
 filtered_data['Adjusted_Price'] = pd.to_numeric(filtered_data['Adjusted_Price'], errors='coerce')
 formatted_df = filtered_data.style.format({
@@ -195,7 +194,10 @@ gradient_colors = ['#00FF00', '#FFFF00', '#FFA500', '#FF0000']  # Green to Red g
 # Calculate quantile values for prices in your dataset
 quantiles = list(filtered_data['Price'].quantile(np.linspace(0, 1, len(gradient_colors)+1)))
 
+filtered_data['Adjusted_Price'] = filtered_data['Adjusted_Price'].fillna(filtered_data['Price'])
+
 # Iterate over the DataFrame and add markers with popups
+
 for index, row in filtered_data.iterrows():
     full_address = row['Address']
     original_price = int(row['Price']) / 1000 
