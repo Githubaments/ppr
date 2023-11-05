@@ -160,7 +160,8 @@ quantiles = list(filtered_data['Price'].quantile(np.linspace(0, 1, len(colors)+1
 
 # Iterate over the DataFrame and add markers with popups and different colors
 for index, row in filtered_data.iterrows():
-    popup_text = f"Price: {row['Price']}, Date: {row['Date of Sale (dd/mm/yyyy)']}"
+    price_in_thousands = f"{row['Price'] / 1000:.0f}"  # Format price in thousands with no decimal places
+    popup_text = f"Price: €{price_in_thousands}K, Date: {row['Date of Sale (dd/mm/yyyy)']}"
     color = get_color(row['Price'])
     folium.CircleMarker(
         location=[row['latitude'], row['longitude']],
