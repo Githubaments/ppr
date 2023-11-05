@@ -35,6 +35,13 @@ def get_lat_lon(address):
     API_KEY = st.secrets["API_KEY"]
     gmaps = googlemaps.Client(key=API_KEY)
 
+            
+    # If Eircode is missing, try to get it from the address
+    if pd.isnull(eircode) or eircode == '':
+        eircode_result = gmaps.places(address)
+        if eircode_result and 'postcode' in eircode_result[0]:
+            eircode = eircode_result[0]['postcode']
+
     # Geocode the address to obtain latitude and longitude
     geocode_result = gmaps.geocode(address)
 
@@ -42,7 +49,7 @@ def get_lat_lon(address):
         location = geocode_result[0]['geometry']['location']
         lat, lon = location['lat'], location['lng']
         st.info(f'Geocoding successful for address: {address}')
-        return lat, lon
+        return lat, lon, eircode
     else:
         st.warning(f'Geocoding failed for address: {address}')
         return None, None  # Handle cases where geocoding fails
@@ -120,7 +127,7 @@ if len(filtered_data) < 100:
             address = row['Address']
             eircode = row['Eircode']
             logging.info(f'Geocoding address: {address}')
-            lat, lon = get_lat_lon(address)
+            lat, lon, updated_eircode = get_lat_lon(eircode, address)
             if lat is not None and lon is not None:
                 filtered_data.at[index, 'latitude'] = lat
                 filtered_data.at[index, 'longitude'] = lon
@@ -130,9 +137,12 @@ if len(filtered_data) < 100:
                     # Update the Google Sheet
                     sheet.update_cell(index + 2, filtered_data.columns.get_loc('latitude') + 1, lat)
                     sheet.update_cell(index + 2, filtered_data.columns.get_loc('longitude') + 1, lon)
-                    logging.info("Update successful")
+                    # Update the Eircode in the Google Sheet if it's missing
+                    if pd.isnull(row['Eircode']) or row['Eircode'] == '':
+                        sheet.update_cell(index + 2, filtered_data.columns.get_loc('Eircode') + 1, eircode)
+                        logging.info("Update successful")
                 except Exception as e:
-                        logging.error(f"Update failed: {str(e)}")
+                            logging.error(f"Update failed: {str(e)}")
             else:
                 logging.warning(f'Geocoding failed for address: {address}')
     load_data.clear()
@@ -162,7 +172,7 @@ quantiles = list(filtered_data['Price'].quantile(np.linspace(0, 1, len(gradient_
 # Iterate over the DataFrame and add markers with popups
 for index, row in filtered_data.iterrows():
     full_address = row['Address']
-    popup_text = f"Price: ${int(row['Price']) / 1000}K, Date: {row['Date of Sale (dd/mm/yyyy)']},<br>Address: {full_address}"
+    popup_text = f"Price: ${int(row['Price']) / 1000}K, <br> Date: {row['Date of Sale (dd/mm/yyyy)']},<br>Address: {full_address}"
     color = get_color(row['Price'])
     folium.CircleMarker(
         [row['latitude'], row['longitude']],
