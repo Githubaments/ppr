@@ -160,27 +160,19 @@ quantiles = list(filtered_data['Price'].quantile(np.linspace(0, 1, len(colors)+1
 
 # Iterate over the DataFrame and add markers with popups
 for index, row in filtered_data.iterrows():
-    popup_text = f"Price: {row['Price']}, Date: {row['Date of Sale (dd/mm/yyyy)']}"
+    popup_text = f"Price: ${int(row['Price']) / 1000}K, Date: {row['Date of Sale (dd/mm/yyyy)']}"
     color = get_color(row['Price'])
-    folium.CircleMarker([row['latitude'], row['longitude']], popup=popup_text, tooltip=popup_text, color=color,
-                        fill=True, fill_color=color, fill_opacity=0.6).add_to(m)
+    folium.CircleMarker(
+        [row['latitude'], row['longitude']],
+        popup=popup_text,
+        tooltip=popup_text,
+        color=color,
+        fill=True,
+        fill_color=color,
+        fill_opacity=0.6,
+    ).add_to(m)
 
-# Create a custom HTML legend
-legend_html = """
-<div style="position: fixed; bottom: 50px; left: 50px; background-color: white; border: 2px solid grey; z-index:9999; font-size:14px;">
-&nbsp; Price Legend <br>
-&nbsp; <i class="fa fa-circle fa-1x" style="color:green"></i> $0 - $100,000<br>
-&nbsp; <i class="fa fa-circle fa-1x" style="color:blue"></i> $100,001 - $200,000<br>
-&nbsp; <i class="fa fa-circle fa-1x" style="color:yellow"></i> $200,001 - $300,000<br>
-&nbsp; <i class="fa fa-circle fa-1x" style="color:orange"></i> $300,001 - $400,000<br>
-&nbsp; <i class="fa fa-circle fa-1x" style="color:red"></i> $400,001+<br>
-</div>
-"""
-
-# Add the legend to the map
-folium.Html(legend_html).add_to(m)
-
-# Display the map in Streamlit
-st.markdown(m._repr_html_(), unsafe_allow_html=True)
+# Display the map in Streamlit with custom width and height
+st.markdown(folium_static(m, width=1200, height=800), unsafe_allow_html=True)
 
 
