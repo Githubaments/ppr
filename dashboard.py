@@ -200,7 +200,7 @@ for index, row in filtered_data.iterrows():
     full_address = row['Address']
     original_price = row['Price']
     adjusted_price = int(original_price) / 1000  # Convert the price to thousands
-    popup_text = f"Original Price: ${original_price}, <br> Adjusted Price: ${adjusted_price:.0f}K, <br> Date: {row['Date of Sale (dd/mm/yyyy)']},<br>Address: {full_address}"
+    popup_text = f"Original Price: €{original_price:.0f}, <br> Adjusted Price: €{adjusted_price:.0f}K, <br> Date: {row['Date of Sale (dd/mm/yyyy)']},<br>Address: {full_address}"
     color = get_color(original_price)
     folium.CircleMarker(
         [row['latitude'], row['longitude']],
