@@ -30,16 +30,14 @@ gc = gspread.authorize(credentials)
 
 sheet = gc.open('PPR').sheet1
 
-
 def get_lat_lon(eircode, address):
     API_KEY = st.secrets["API_KEY"]
     gmaps = googlemaps.Client(key=API_KEY)
 
-            
     # If Eircode is missing, try to get it from the address
     if pd.isnull(eircode) or eircode == '':
         eircode_result = gmaps.places(address)
-        if eircode_result and 'postcode' in eircode_result[0]:
+        if eircode_result and eircode_result[0].get('postcode'):
             eircode = eircode_result[0]['postcode']
 
     # Geocode the address to obtain latitude and longitude
@@ -52,7 +50,7 @@ def get_lat_lon(eircode, address):
         return lat, lon, eircode
     else:
         st.warning(f'Geocoding failed for address: {address}')
-        return None, None  # Handle cases where geocoding fails
+        return None, None, eircode
 
 
 def get_color(price):
