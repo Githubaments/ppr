@@ -157,16 +157,22 @@ colors = ['green', 'blue', 'yellow', 'orange', 'red']
 # Calculate quantile values for prices in your dataset
 quantiles = list(filtered_data['Price'].quantile(np.linspace(0, 1, len(colors)+1)))
 
-# Iterate over the DataFrame and add markers with popups
+# Create a marker cluster layer for better performance
+marker_cluster = MarkerCluster().add_to(m)
+
+# Iterate over the DataFrame and add markers with popups and different colors
 for index, row in filtered_data.iterrows():
     popup_text = f"Price: {row['Price']}, Date: {row['Date of Sale (dd/mm/yyyy)']}"
     color = get_color(row['Price'])
-    radius=5,
-    color=color,
-    fill=True,
-    fill_color=color, 
-    fill_opacity=0.6,
-    folium.CircleMarker([row['latitude'], row['longitude']], popup=popup_text, tooltip=popup_text).add_to(m)
+    folium.CircleMarker(
+        location=[row['latitude'], row['longitude']],
+        radius=4,
+        popup=folium.Popup(popup_text, max_width=300),  # Include the color here in the popup
+        color=color,
+        fill=True,
+        fill_color=color,
+        fill_opacity=0.6,
+    ).add_to(marker_cluster)
 
 # Display the map in Streamlit
 folium_static(m)
