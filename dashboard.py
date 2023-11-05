@@ -52,7 +52,7 @@ def get_color(price):
     """Determine the color for a property based on its price quantile."""
     for i in range(len(quantiles)-1):
         if quantiles[i] <= price <= quantiles[i+1]:
-            return colors[i]
+            return gradient_colors[i]
     return 'gray'  # Default color if something goes wrong
 
 # Create a function to load the data and cache it
@@ -169,7 +169,7 @@ for index, row in filtered_data.iterrows():
         popup=popup_text,
         radius=4,
         tooltip=popup_text,
-        color=color,
+        color=gradient_colors,
         fill=True,
         fill_color=color,
         fill_opacity=0.6,
