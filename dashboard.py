@@ -244,7 +244,7 @@ def calculate_opacity(year):
 
 
 # Iterate over the DataFrame and add markers with popups
-
+current_year = datetime.now().year
 for index, row in filtered_data.iterrows():
     full_address = row['Address']
     marker_price = int(row['Price']) 
