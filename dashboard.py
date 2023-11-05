@@ -37,8 +37,10 @@ def get_lat_lon(eircode, address):
     # If Eircode is missing, try to get it from the address
     if pd.isnull(eircode) or eircode == '':
         eircode_result = gmaps.places(address)
-        if eircode_result and len(eircode_result) > 0 and eircode_result[0].get('postcode'):
-            eircode = eircode_result[0]['postcode']
+        if eircode_result:
+            eircode_info = eircode_result[0]
+            if 'postcode' in eircode_info:
+                eircode = eircode_info['postcode']
 
     # Geocode the address to obtain latitude and longitude
     geocode_result = gmaps.geocode(address)
@@ -51,6 +53,7 @@ def get_lat_lon(eircode, address):
     else:
         st.warning(f'Geocoding failed for address: {address}')
         return None, None, eircode
+
 
 
 def get_color(price):
