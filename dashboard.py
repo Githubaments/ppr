@@ -134,6 +134,7 @@ st.subheader("Filtered Data:")
 
 filtered_data['Adjusted_Price'] = pd.to_numeric(filtered_data['Adjusted_Price'], errors='coerce')
 
+formatted_df = filtered_data.copy()
 
 # Convert 'Date of Sale (dd/mm/yyyy)' to datetime format
 formatted_df['Date of Sale (dd/mm/yyyy)'] = pd.to_datetime(
