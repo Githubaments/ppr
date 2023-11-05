@@ -130,13 +130,7 @@ if exact_match is not None and not exact_match.empty:
 st.subheader("Filtered Data:")
 
 
-# Convert 'Date of Sale (dd/mm/yyyy)' to datetime format
-filtered_data['Date of Sale (dd/mm/yyyy)'] = pd.to_datetime(filtered_data['Date of Sale (dd/mm/yyyy)'], dayfirst=True, errors='coerce')
 
-# Now that the column is in datetime format, format it to 'yyyymmdd' string
-filtered_data['Date of Sale (dd/mm/yyyy)'] = filtered_data['Date of Sale (dd/mm/yyyy)'].dt.strftime('%Y%m%d')
-
-filtered_data = filtered_data.sort_values(by='Date of Sale (dd/mm/yyyy)')
 filtered_data['Adjusted_Price'] = pd.to_numeric(filtered_data['Adjusted_Price'], errors='coerce')
 
 formatted_df = filtered_data.style.format({
@@ -144,6 +138,13 @@ formatted_df = filtered_data.style.format({
                 'Price': lambda x: '{:,.0f}'.format(x) if pd.notnull(x) else ''
 
 })
+# Convert 'Date of Sale (dd/mm/yyyy)' to datetime format
+formatted_df['Date of Sale (dd/mm/yyyy)'] = pd.to_datetime(formatted_df['Date of Sale (dd/mm/yyyy)'], dayfirst=True, errors='coerce')
+
+# Now that the column is in datetime format, format it to 'yyyymmdd' string
+formatted_df['Date of Sale (dd/mm/yyyy)'] = formatted_df['Date of Sale (dd/mm/yyyy)'].dt.strftime('%Y%m%d')
+
+formatted_df = formatted_df.sort_values(by='Date of Sale (dd/mm/yyyy)')
 formatted_df
 
 # Check if the user has inputted data
