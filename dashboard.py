@@ -210,6 +210,7 @@ filtered_data['Adjusted_Price'] = filtered_data['Adjusted_Price'].fillna(filtere
 
 
 # Get the range of years
+filtered_data['Year'] = filtered_data['Date of Sale (dd/mm/yyyy)'].dt.year
 min_year = filtered_data['Year'].min()
 max_year = filtered_data['Year'].max()
 
