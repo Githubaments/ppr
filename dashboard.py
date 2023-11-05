@@ -149,7 +149,7 @@ filtered_data = filtered_data[filtered_data['latitude'] != '']
 st.title('Google Sheet Data on Map')
 
 # Create a map object using folium
-m = folium.Map(location=[filtered_data['latitude'].mean(), filtered_data['longitude'].mean()], zoom_start=10)
+m = folium.Map(location=[filtered_data['latitude'].mean(), filtered_data['longitude'].mean()], zoom_start=20)
 
 # Define colors for each quantile
 colors = ['green', 'blue', 'yellow', 'orange', 'red']
