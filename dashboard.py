@@ -158,35 +158,6 @@ colors = ['green', 'blue', 'yellow', 'orange', 'red']
 # Calculate quantile values for prices in your dataset
 quantiles = list(filtered_data['Price'].quantile(np.linspace(0, 1, len(colors)+1)))
 
-# Iterate over the DataFrame and add markers with popups and different colors
-for index, row in filtered_data.iterrows():
-    price_in_thousands = f"{row['Price'] / 1000:.0f}"  # Format price in thousands with no decimal places
-    popup_text = f"Price: €{price_in_thousands}K, Date: {row['Date of Sale (dd/mm/yyyy)']}"
-    color = get_color(row['Price'])
-    folium.CircleMarker(
-        location=[row['latitude'], row['longitude']],
-        radius=5,
-        popup=folium.Popup(popup_text, max_width=300),  # Include the color here in the popup
-        color=color,
-        fill=True,
-        fill_color=color,
-        fill_opacity=0.6,
-    ).add_to(m)
-
-
-# Display the map in Streamlit with custom width and height
-st.markdown(folium_static(m, width=1200, height=800), unsafe_allow_html=True)
-
-
-# Create a map object using folium
-m = folium.Map(location=[filtered_data['latitude'].mean(), filtered_data['longitude'].mean()], zoom_start=10)
-
-# Define colors for each quantile
-colors = ['green', 'blue', 'yellow', 'orange', 'red']
-
-# Calculate quantile values for prices in your dataset
-quantiles = list(filtered_data['Price'].quantile(np.linspace(0, 1, len(colors) + 1)))
-
 # Create a legend
 legend_html = """
      <div style="
@@ -204,5 +175,22 @@ for i in range(len(quantiles) - 1):
     legend_html += f"<i style='background:{colors[i]}'></i> ${int(quantiles[i]) / 1000}K - ${int(quantiles[i + 1]) / 1000}K<br>"
 legend_html += "</div>"
 m.get_root().html.add_child(folium.Element(legend_html))
+
+# Iterate over the DataFrame and add markers with popups
+for index, row in filtered_data.iterrows():
+    popup_text = f"Price: ${int(row['Price']) / 1000}K, Date: {row['Date of Sale (dd/mm/yyyy)']}"
+    color = get_color(row['Price'])
+    folium.CircleMarker(
+        [row['latitude'], row['longitude']],
+        popup=popup_text,
+        tooltip=popup_text,
+        color=color,
+        fill=True,
+        fill_color=color,
+        fill_opacity=0.6,
+    ).add_to(m)
+
+# Display the map in Streamlit with custom width and height
+st.markdown(folium_static(m, width=1200, height=800), unsafe_allow_html=True)
 
 
