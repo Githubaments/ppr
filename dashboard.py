@@ -137,7 +137,12 @@ filtered_data['Date of Sale (dd/mm/yyyy)'] = filtered_data['Date of Sale (dd/mm/
 filtered_data = filtered_data.sort_values(by='Date of Sale (dd/mm/yyyy)')
 filtered_data['Adjusted_Price'] = pd.to_numeric(filtered_data['Adjusted_Price'], errors='coerce')
 
+formatted_df = filtered_data.style.format({
+    'Adjusted_Price': lambda x: '{:,.0f}'.format(x) if pd.notnull(x) else '',
+                'Price': lambda x: '{:,.0f}'.format(x) if pd.notnull(x) else ''
 
+})
+formatted_df
 
 # Check if the user has inputted data
 user_has_input = bool(eircode_input or address_input)
@@ -205,19 +210,20 @@ filtered_data['Adjusted_Price'] = filtered_data['Adjusted_Price'].fillna(filtere
 for index, row in filtered_data.iterrows():
     full_address = row['Address']
     original_price = int(row['Price']) / 1000 
-    adjusted_price = int(row['Adjusted_Price']) / 1000   # Convert the price to thousands
-    popup_text = f"Original Price: €{original_price:.0f}, <br> Adjusted Price: €{adjusted_price:.0f}K, <br> Date: {row['Date of Sale (dd/mm/yyyy)']},<br>Address: {full_address}"
-    color = get_color(original_price)
+    adjusted_price_format = int(row['Adjusted_Price']) / 1000   # Convert the price to thousands
+    popup_text = f"Original Price: €{original_price:.0f}K, <br> Adjusted Price: €{adjusted_price_format:.0f}K, <br> Date: {row['Date of Sale (dd/mm/yyyy)']},<br>Address: {full_address}"
+    color = get_color(original_price)  # This should be based on the price for which you want to assign the color
     folium.CircleMarker(
         [row['latitude'], row['longitude']],
         popup=popup_text,
         radius=6,
         tooltip=popup_text,
-        color=gradient_colors,
+        color=color,  # This should be the color variable, not the gradient_colors list
         fill=True,
-        fill_color=color,
+        fill_color=color,  # Same here, use the color variable
         fill_opacity=0.6,
     ).add_to(m)
+
 
 # Display the map in Streamlit with custom width and height
 st.markdown(folium_static(m, width=1200, height=800), unsafe_allow_html=True)
