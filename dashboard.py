@@ -8,6 +8,7 @@ import numpy as np
 from streamlit_folium import folium_static
 from gspread_dataframe import get_as_dataframe
 from google.oauth2 import service_account
+from folium.plugins import MarkerCluster
 
 # Authenticate with Google Sheets using your credentials JSON file
 from oauth2client.service_account import ServiceAccountCredentials
