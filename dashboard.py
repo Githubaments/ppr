@@ -5,6 +5,7 @@ import googlemaps
 import logging
 import folium
 import numpy as np
+import plotly.express as px
 from streamlit_folium import folium_static
 from gspread_dataframe import get_as_dataframe
 from google.oauth2 import service_account
@@ -153,7 +154,7 @@ st.title('Google Sheet Data on Map')
 m = folium.Map(location=[filtered_data['latitude'].mean(), filtered_data['longitude'].mean()], zoom_start=15)
 
 # Define colors for each quantile
-colors = ['green', 'blue', 'yellow', 'orange', 'red']
+gradient_colors = ['#00FF00', '#FFFF00', '#FFA500', '#FF0000']  # Green to Red gradient
 
 # Calculate quantile values for prices in your dataset
 quantiles = list(filtered_data['Price'].quantile(np.linspace(0, 1, len(colors)+1)))
