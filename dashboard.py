@@ -229,7 +229,7 @@ for index, row in filtered_data.iterrows():
 
 
 # Display the map in Streamlit with custom width and height
-st.markdown(folium_static(m, width=1200, height=800), unsafe_allow_html=True)
+folium_static(m, width=1200, height=800)
 
 # Loop through each color and its corresponding price range to display the legend
 for color, price_range in zip(gradient_colors, [f"{quantiles[i]:,.2f} - {quantiles[i+1]:,.2f}" for i in range(len(quantiles)-1)]):
