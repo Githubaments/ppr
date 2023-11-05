@@ -150,7 +150,7 @@ filtered_data = filtered_data[filtered_data['latitude'] != '']
 st.title('Google Sheet Data on Map')
 
 # Create a map object using folium
-m = folium.Map(location=[filtered_data['latitude'].mean(), filtered_data['longitude'].mean()], zoom_start=20)
+m = folium.Map(location=[filtered_data['latitude'].mean(), filtered_data['longitude'].mean()], zoom_start=15)
 
 # Define colors for each quantile
 colors = ['green', 'blue', 'yellow', 'orange', 'red']
@@ -173,5 +173,8 @@ for index, row in filtered_data.iterrows():
         fill_opacity=0.6,
     ).add_to(m)
 
-# Display the map in Streamlit
-folium_static(m)
+
+# Display the map in Streamlit with custom width and height
+st.markdown(folium_static(m, width=1200, height=800), unsafe_allow_html=True)
+
+
