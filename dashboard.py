@@ -160,7 +160,6 @@ for index, row in filtered_data.iterrows():
     fill_color=color, 
     fill_opacity=0.6,
     folium.CircleMarker([row['latitude'], row['longitude']], popup=popup_text, tooltip=popup_text).add_to(m)
-    ).add_to(m)
 
 # Display the map in Streamlit
 folium_static(m)
