@@ -45,7 +45,12 @@ def get_lat_lon(address):
         return None, None  # Handle cases where geocoding fails
 
 
-
+def get_color(price):
+    """Determine the color for a property based on its price quantile."""
+    for i in range(len(quantiles)-1):
+        if quantiles[i] <= price <= quantiles[i+1]:
+            return colors[i]
+    return 'gray'  # Default color if something goes wrong
 
 # Create a function to load the data and cache it
 @st.cache_data
@@ -148,9 +153,15 @@ m = folium.Map(location=[filtered_data['latitude'].mean(), filtered_data['longit
 # Iterate over the DataFrame and add markers with popups
 for index, row in filtered_data.iterrows():
     popup_text = f"Price: {row['Price']}, Date: {row['Date of Sale (dd/mm/yyyy)']}"
-    folium.Marker([row['latitude'], row['longitude']], popup=popup_text, tooltip=popup_text).add_to(m)
+    color = get_color(row['Price'])
+    radius=5,
+    color=color,
+    fill=True,
+    fill_color=color, 
+    fill_opacity=0.6,
+    folium.CircleMarker([row['latitude'], row['longitude']], popup=popup_text, tooltip=popup_text).add_to(m)
+    ).add_to(m)
 
 # Display the map in Streamlit
 folium_static(m)
 
-filtered_data
