@@ -198,8 +198,8 @@ quantiles = list(filtered_data['Price'].quantile(np.linspace(0, 1, len(gradient_
 # Iterate over the DataFrame and add markers with popups
 for index, row in filtered_data.iterrows():
     full_address = row['Address']
-    original_price = int(row['original_price']) / 1000 
-    adjusted_price = int(row['adjusted_price']) / 1000   # Convert the price to thousands
+    original_price = int(row['Price']) / 1000 
+    adjusted_price = int(row['Adjusted_Price']) / 1000   # Convert the price to thousands
     popup_text = f"Original Price: €{original_price:.0f}, <br> Adjusted Price: €{adjusted_price:.0f}K, <br> Date: {row['Date of Sale (dd/mm/yyyy)']},<br>Address: {full_address}"
     color = get_color(original_price)
     folium.CircleMarker(
