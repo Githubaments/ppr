@@ -181,7 +181,6 @@ legend_html = """
 folium.Html(legend_html).add_to(m)
 
 # Display the map in Streamlit
-st.markdown(m._repr_html_(), unsafe_allow_html=True)
-st.markdown(folium_static(m, width=1200, height=800), unsafe_allow_html=True)
+st.markdown(m._repr_html_(), width=1200, height=800), unsafe_allow_html=True)
 
 
