@@ -215,6 +215,17 @@ filtered_data['Adjusted_Price'] = filtered_data['Adjusted_Price'].fillna(filtere
 
 
 # Get the range of years
+# Attempt to convert 'Date of Sale (dd/mm/yyyy)' to datetime format
+filtered_data['Date of Sale (dd/mm/yyyy)'] = pd.to_datetime(filtered_data['Date of Sale (dd/mm/yyyy)'], format='%d/%m/%Y', errors='coerce')
+
+# Check if the conversion was successful by looking at the dtype
+if pd.api.types.is_datetime64_any_dtype(filtered_data['Date of Sale (dd/mm/yyyy)']):
+    # Now you can safely use .dt accessor
+    filtered_data['Year'] = filtered_data['Date of Sale (dd/mm/yyyy)'].dt.year
+else:
+    # Handle the case where the conversion failed
+    st.error("Failed to convert 'Date of Sale (dd/mm/yyyy)' to datetime format.")
+
 filtered_data['Year'] = filtered_data['Date of Sale (dd/mm/yyyy)'].dt.year
 min_year = filtered_data['Year'].min()
 max_year = filtered_data['Year'].max()
@@ -229,6 +240,8 @@ def calculate_opacity(year):
     normalized = (year - min_year) / (max_year - min_year)
     # Scale to opacity range
     return normalized * (max_opacity - min_opacity) + min_opacity
+
+
 
 # Iterate over the DataFrame and add markers with popups
 
