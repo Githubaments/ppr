@@ -30,34 +30,40 @@ gc = gspread.authorize(credentials)
 
 sheet = gc.open('PPR').sheet1
 
-def get_lat_lon(eircode, address):
+def get_lat_lon(eircode, address, max_retries=3):
     API_KEY = st.secrets["API_KEY"]
     gmaps = googlemaps.Client(key=API_KEY)
+    backoff_factor = 1.5  # Determines the backoff period
 
-    # If Eircode is missing, try to get it from the address
-    if pd.isnull(eircode) or eircode == '':
+    for attempt in range(1, max_retries + 1):
         try:
-            eircode_result = gmaps.places(address)
-            if eircode_result['results']:
-                eircode_info = eircode_result['results'][0]
-                if 'postcode' in eircode_info:
-                    eircode = eircode_info['postcode']
+            # If Eircode is missing, try to get it from the address
+            if pd.isnull(eircode) or eircode == '':
+                eircode_result = gmaps.places(address)
+                if eircode_result['results']:
+                    eircode_info = eircode_result['results'][0]
+                    if 'postcode' in eircode_info:
+                        eircode = eircode_info['postcode']
+
+            # Geocode the address to obtain latitude and longitude
+            geocode_result = gmaps.geocode(address)
+            if geocode_result:
+                location = geocode_result[0]['geometry']['location']
+                lat, lon = location['lat'], location['lng']
+                st.info(f'Geocoding successful for address: {address}')
+                return lat, lon, eircode
         except Exception as e:
-            st.error(f'Error retrieving Eircode: {e}')
-            # Handle the exception as needed, for example, log it or set eircode to None
+            error_str = str(e)
+            if 'quota exceeded' in error_str.lower() or '429' in error_str:
+                wait_time = backoff_factor ** (attempt - 1)
+                st.error(f'Attempt {attempt} failed due to rate limit: {e}. Retrying in {wait_time:.2f} seconds.')
+                time.sleep(wait_time)
+            else:
+                st.error(f'Attempt {attempt} failed with error: {e}. No more retries.')
+                return None, None, eircode
 
-    try:
-        geocode_result = gmaps.geocode(address)
-        if geocode_result:
-            location = geocode_result[0]['geometry']['location']
-            lat, lon = location['lat'], location['lng']
-            st.info(f'Geocoding successful for address: {address}')
-            return lat, lon, eircode
-    except Exception as e:
-        st.error(f'Geocoding failed for address: {address} with error {e}')
-
-    # If geocoding was not successful
-    st.warning(f'Geocoding failed for address: {address}')
+    # If all retries failed due to rate limit
+    st.warning(f'Geocoding failed for address: {address} after {max_retries} attempts due to rate limits.')
     return None, None, eircode
 
 
@@ -179,8 +185,10 @@ quantiles = list(filtered_data['Price'].quantile(np.linspace(0, 1, len(gradient_
 # Iterate over the DataFrame and add markers with popups
 for index, row in filtered_data.iterrows():
     full_address = row['Address']
-    popup_text = f"Price: ${int(row['Price']) / 1000}K, <br> Date: {row['Date of Sale (dd/mm/yyyy)']},<br>Address: {full_address}"
-    color = get_color(row['Price'])
+    original_price = row['Price']
+    adjusted_price = int(original_price) / 1000  # Convert the price to thousands
+    popup_text = f"Original Price: ${original_price}, <br> Adjusted Price: ${adjusted_price:.0f}K, <br> Date: {row['Date of Sale (dd/mm/yyyy)']},<br>Address: {full_address}"
+    color = get_color(original_price)
     folium.CircleMarker(
         [row['latitude'], row['longitude']],
         popup=popup_text,
