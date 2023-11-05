@@ -241,10 +241,9 @@ for index, row in filtered_data.iterrows():
         radius=6,
         tooltip=popup_text,
         fill_opacity=fill_opacity,
-        color=color,  # This should be the color variable, not the gradient_colors list
+        color=color,  
         fill=True,
         fill_color=color,  # Same here, use the color variable
-        fill_opacity=0.6,
     ).add_to(m)
 
 
